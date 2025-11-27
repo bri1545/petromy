@@ -1,0 +1,137 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  password      String
+  name          String
+  role          String    @default("CITIZEN")
+  companyName   String?
+  companyInn    String?
+  phone         String?
+  tokens        Int       @default(5)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  projects      Project[]
+  votes         Vote[]
+  comments      Comment[]
+  contributions Contribution[]
+  curatedProjects Project[] @relation("CuratorProjects")
+}
+
+model Project {
+  id              String    @id @default(cuid())
+  title           String
+  description     String
+  category        String
+  status          String    @default("DRAFT")
+  
+  estimatedBudget Float?
+  location        String?
+  timeline        String?
+  
+  benefits        String?
+  targetAudience  String?
+  
+  isCompanyProject Boolean  @default(false)
+  
+  aiAnalysis      String?
+  aiPros          String?
+  aiCons          String?
+  aiRisks         String?
+  aiInvestmentAdvantages String?
+  
+  moderationNotes String?
+  moderatedAt     DateTime?
+  moderatedBy     String?
+  
+  fundraisingGoal   Float?
+  fundraisingRaised Float    @default(0)
+  fundraisingDeadline DateTime?
+  
+  votesFor        Int       @default(0)
+  votesAgainst    Int       @default(0)
+  
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  
+  authorId        String
+  author          User      @relation(fields: [authorId], references: [id])
+  
+  curatorId       String?
+  curator         User?     @relation("CuratorProjects", fields: [curatorId], references: [id])
+  
+  votes           Vote[]
+  comments        Comment[]
+  contributions   Contribution[]
+}
+
+model Vote {
+  id        String   @id @default(cuid())
+  isFor     Boolean
+  createdAt DateTime @default(now())
+  
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id])
+  
+  @@unique([userId, projectId])
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  content   String
+  
+  isApproved Boolean @default(false)
+  aiModerated Boolean @default(false)
+  aiModerationResult String?
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id])
+}
+
+model Contribution {
+  id        String   @id @default(cuid())
+  amount    Float
+  message   String?
+  isAnonymous Boolean @default(false)
+  createdAt DateTime @default(now())
+  
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id])
+}
+
+model VotingPhase {
+  id        String   @id @default(cuid())
+  name      String
+  startDate DateTime
+  endDate   DateTime
+  isActive  Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model TokenAirdrop {
+  id        String   @id @default(cuid())
+  amount    Int
+  reason    String
+  createdAt DateTime @default(now())
+}
