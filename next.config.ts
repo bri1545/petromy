@@ -1,10 +1,20 @@
 import type { NextConfig } from "next";
 
-const replitDomains = process.env.REPLIT_DOMAINS?.split(",") || [];
-const allowedOrigins = replitDomains.map(domain => `https://${domain}`);
-
 const nextConfig: NextConfig = {
-  allowedDevOrigins: allowedOrigins,
+  allowedDevOrigins: ["*"],
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "no-store, no-cache, must-revalidate, proxy-revalidate",
+          },
+        ],
+      },
+    ];
+  },
 };
 
 export default nextConfig;

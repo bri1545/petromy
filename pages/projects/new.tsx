@@ -34,16 +34,66 @@ export default function NewProject() {
     targetAudience: ''
   })
 
+  const inputStyle = {
+    width: '100%',
+    padding: '0.875rem 1rem 0.875rem 2.75rem',
+    border: '1px solid #d1d5db',
+    borderRadius: '0.5rem',
+    fontSize: '1rem',
+    outline: 'none',
+    boxSizing: 'border-box' as const
+  }
+
+  const inputStyleNoIcon = {
+    width: '100%',
+    padding: '0.875rem 1rem',
+    border: '1px solid #d1d5db',
+    borderRadius: '0.5rem',
+    fontSize: '1rem',
+    outline: 'none',
+    boxSizing: 'border-box' as const
+  }
+
+  const textareaStyle = {
+    width: '100%',
+    padding: '0.875rem 1rem',
+    border: '1px solid #d1d5db',
+    borderRadius: '0.5rem',
+    fontSize: '1rem',
+    outline: 'none',
+    boxSizing: 'border-box' as const,
+    resize: 'vertical' as const
+  }
+
   if (status === 'loading') {
-    return <div className="text-center py-20">Загрузка...</div>
+    return (
+      <div style={{ textAlign: 'center', padding: '5rem 0', color: '#64748b' }}>
+        Загрузка...
+      </div>
+    )
   }
 
   if (!session) {
     return (
-      <div className="text-center py-20">
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">Необходима авторизация</h2>
-        <p className="text-gray-600 mb-6">Войдите или зарегистрируйтесь, чтобы подать проект</p>
-        <Link href="/auth/login" className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700">
+      <div style={{ textAlign: 'center', padding: '5rem 0' }}>
+        <h2 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#1e293b', marginBottom: '1rem' }}>
+          Необходима авторизация
+        </h2>
+        <p style={{ color: '#64748b', marginBottom: '1.5rem' }}>
+          Войдите или зарегистрируйтесь, чтобы подать проект
+        </p>
+        <Link 
+          href="/auth/login" 
+          style={{
+            display: 'inline-block',
+            backgroundColor: '#2563eb',
+            color: 'white',
+            padding: '0.75rem 1.5rem',
+            borderRadius: '0.5rem',
+            fontWeight: '600',
+            textDecoration: 'none'
+          }}
+        >
           Войти
         </Link>
       </div>
@@ -107,189 +157,215 @@ export default function NewProject() {
         <title>Новый проект - Мой Петропавловск</title>
       </Head>
 
-      <div className="max-w-3xl mx-auto">
-        <Link href="/projects" className="inline-flex items-center text-blue-600 hover:text-blue-700 mb-6">
-          <ArrowLeft className="w-4 h-4 mr-2" />
+      <div style={{ maxWidth: '48rem', margin: '0 auto' }}>
+        <Link 
+          href="/projects" 
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            color: '#2563eb',
+            textDecoration: 'none',
+            marginBottom: '1.5rem'
+          }}
+        >
+          <ArrowLeft style={{ width: '16px', height: '16px', marginRight: '0.5rem' }} />
           Назад к проектам
         </Link>
 
-        <div className="bg-white rounded-2xl shadow-xl p-8">
-          <div className="mb-8">
-            <h1 className="text-2xl font-bold text-gray-900">
+        <div style={{
+          backgroundColor: 'white',
+          borderRadius: '1rem',
+          boxShadow: '0 10px 25px -5px rgba(0,0,0,0.1)',
+          padding: '2.5rem',
+          border: '1px solid #e2e8f0'
+        }}>
+          <div style={{ marginBottom: '2rem' }}>
+            <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#1e293b' }}>
               {isCompany ? 'Подача коммерческого проекта' : 'Подача гражданской инициативы'}
             </h1>
-            <p className="text-gray-600 mt-2">
+            <p style={{ color: '#64748b', marginTop: '0.5rem' }}>
               Заполните форму максимально подробно. Проект будет проверен модераторами.
             </p>
           </div>
 
           {error && (
-            <div className="bg-red-50 text-red-600 p-4 rounded-lg mb-6 flex items-center">
-              <AlertCircle className="w-5 h-5 mr-2 flex-shrink-0" />
+            <div style={{
+              backgroundColor: '#fef2f2',
+              color: '#dc2626',
+              padding: '1rem',
+              borderRadius: '0.5rem',
+              marginBottom: '1.5rem',
+              display: 'flex',
+              alignItems: 'center'
+            }}>
+              <AlertCircle style={{ width: '20px', height: '20px', marginRight: '0.5rem', flexShrink: 0 }} />
               {error}
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
+          <form onSubmit={handleSubmit}>
+            <div style={{ marginBottom: '1.5rem' }}>
+              <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#374151', marginBottom: '0.5rem' }}>
                 Название проекта *
               </label>
-              <div className="relative">
-                <FileText className="absolute left-3 top-3 text-gray-400 w-5 h-5" />
+              <div style={{ position: 'relative' }}>
+                <FileText style={{ position: 'absolute', left: '12px', top: '14px', color: '#9ca3af', width: '20px', height: '20px' }} />
                 <input
-                  id="title"
                   name="title"
                   type="text"
                   value={formData.title}
                   onChange={handleChange}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  style={inputStyle}
                   placeholder="Например: Благоустройство парка на ул. Ленина"
                   required
                 />
               </div>
-              <p className="text-sm text-gray-500 mt-1">Минимум 10 символов</p>
+              <p style={{ fontSize: '0.875rem', color: '#64748b', marginTop: '0.25rem' }}>Минимум 10 символов</p>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+            <div style={{ marginBottom: '1.5rem' }}>
+              <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#374151', marginBottom: '0.5rem' }}>
                 Категория *
               </label>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(150px, 1fr))', gap: '0.75rem' }}>
                 {categories.map(cat => (
                   <button
                     key={cat.value}
                     type="button"
                     onClick={() => setFormData({ ...formData, category: cat.value })}
-                    className={`p-3 rounded-lg border-2 text-left transition-colors ${
-                      formData.category === cat.value
-                        ? 'border-blue-500 bg-blue-50'
-                        : 'border-gray-200 hover:border-gray-300'
-                    }`}
+                    style={{
+                      padding: '0.75rem',
+                      borderRadius: '0.5rem',
+                      border: formData.category === cat.value ? '2px solid #2563eb' : '2px solid #e2e8f0',
+                      backgroundColor: formData.category === cat.value ? '#eff6ff' : 'white',
+                      color: formData.category === cat.value ? '#1e40af' : '#475569',
+                      textAlign: 'left',
+                      cursor: 'pointer'
+                    }}
                   >
-                    <span className="font-medium block">{cat.label}</span>
-                    <span className="text-xs text-gray-500">{cat.desc}</span>
+                    <span style={{ fontWeight: '500', display: 'block' }}>{cat.label}</span>
+                    <span style={{ fontSize: '0.75rem', color: '#64748b' }}>{cat.desc}</span>
                   </button>
                 ))}
               </div>
             </div>
 
-            <div>
-              <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
+            <div style={{ marginBottom: '1.5rem' }}>
+              <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#374151', marginBottom: '0.5rem' }}>
                 Описание проекта *
               </label>
               <textarea
-                id="description"
                 name="description"
                 value={formData.description}
                 onChange={handleChange}
                 rows={6}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                style={textareaStyle}
                 placeholder="Опишите подробно суть проекта, его цели, ожидаемые результаты..."
                 required
               />
-              <p className="text-sm text-gray-500 mt-1">
+              <p style={{ fontSize: '0.875rem', color: formData.description.length >= 100 ? '#059669' : '#64748b', marginTop: '0.25rem' }}>
                 {formData.description.length}/100 символов (минимум 100)
               </p>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-6">
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem', marginBottom: '1.5rem' }}>
               <div>
-                <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-2">
+                <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#374151', marginBottom: '0.5rem' }}>
                   Местоположение
                 </label>
-                <div className="relative">
-                  <MapPin className="absolute left-3 top-3 text-gray-400 w-5 h-5" />
+                <div style={{ position: 'relative' }}>
+                  <MapPin style={{ position: 'absolute', left: '12px', top: '14px', color: '#9ca3af', width: '20px', height: '20px' }} />
                   <input
-                    id="location"
                     name="location"
                     type="text"
                     value={formData.location}
                     onChange={handleChange}
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    style={inputStyle}
                     placeholder="ул. Ленина, 15"
                   />
                 </div>
               </div>
 
               <div>
-                <label htmlFor="estimatedBudget" className="block text-sm font-medium text-gray-700 mb-2">
+                <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#374151', marginBottom: '0.5rem' }}>
                   Примерный бюджет (тенге)
                 </label>
-                <div className="relative">
-                  <Coins className="absolute left-3 top-3 text-gray-400 w-5 h-5" />
+                <div style={{ position: 'relative' }}>
+                  <Coins style={{ position: 'absolute', left: '12px', top: '14px', color: '#9ca3af', width: '20px', height: '20px' }} />
                   <input
-                    id="estimatedBudget"
                     name="estimatedBudget"
                     type="number"
                     value={formData.estimatedBudget}
                     onChange={handleChange}
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    style={inputStyle}
                     placeholder="1000000"
                   />
                 </div>
               </div>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-6">
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem', marginBottom: '1.5rem' }}>
               <div>
-                <label htmlFor="timeline" className="block text-sm font-medium text-gray-700 mb-2">
+                <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#374151', marginBottom: '0.5rem' }}>
                   Сроки реализации
                 </label>
-                <div className="relative">
-                  <Clock className="absolute left-3 top-3 text-gray-400 w-5 h-5" />
+                <div style={{ position: 'relative' }}>
+                  <Clock style={{ position: 'absolute', left: '12px', top: '14px', color: '#9ca3af', width: '20px', height: '20px' }} />
                   <input
-                    id="timeline"
                     name="timeline"
                     type="text"
                     value={formData.timeline}
                     onChange={handleChange}
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    style={inputStyle}
                     placeholder="3-6 месяцев"
                   />
                 </div>
               </div>
 
               <div>
-                <label htmlFor="targetAudience" className="block text-sm font-medium text-gray-700 mb-2">
+                <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#374151', marginBottom: '0.5rem' }}>
                   Целевая аудитория
                 </label>
-                <div className="relative">
-                  <Users className="absolute left-3 top-3 text-gray-400 w-5 h-5" />
+                <div style={{ position: 'relative' }}>
+                  <Users style={{ position: 'absolute', left: '12px', top: '14px', color: '#9ca3af', width: '20px', height: '20px' }} />
                   <input
-                    id="targetAudience"
                     name="targetAudience"
                     type="text"
                     value={formData.targetAudience}
                     onChange={handleChange}
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    style={inputStyle}
                     placeholder="Жители микрорайона"
                   />
                 </div>
               </div>
             </div>
 
-            <div>
-              <label htmlFor="benefits" className="block text-sm font-medium text-gray-700 mb-2">
+            <div style={{ marginBottom: '1.5rem' }}>
+              <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#374151', marginBottom: '0.5rem' }}>
                 Преимущества проекта
               </label>
               <textarea
-                id="benefits"
                 name="benefits"
                 value={formData.benefits}
                 onChange={handleChange}
                 rows={3}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                style={textareaStyle}
                 placeholder="Какую пользу принесет проект городу и жителям?"
               />
             </div>
 
-            <div className="bg-blue-50 p-4 rounded-lg">
-              <div className="flex items-start">
-                <CheckCircle className="w-5 h-5 text-blue-600 mr-3 mt-0.5" />
+            <div style={{
+              backgroundColor: '#eff6ff',
+              padding: '1rem',
+              borderRadius: '0.5rem',
+              marginBottom: '1.5rem',
+              border: '1px solid #bfdbfe'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'flex-start' }}>
+                <CheckCircle style={{ width: '20px', height: '20px', color: '#2563eb', marginRight: '0.75rem', marginTop: '2px', flexShrink: 0 }} />
                 <div>
-                  <p className="text-sm font-medium text-blue-900">После подачи:</p>
-                  <ul className="text-sm text-blue-700 mt-1 space-y-1">
+                  <p style={{ fontSize: '0.875rem', fontWeight: '500', color: '#1e40af' }}>После подачи:</p>
+                  <ul style={{ fontSize: '0.875rem', color: '#1e40af', marginTop: '0.25rem', paddingLeft: '1rem' }}>
                     <li>Проект проверяется модераторами</li>
                     <li>AI анализирует плюсы, минусы и риски</li>
                     <li>После одобрения открывается голосование</li>
@@ -301,13 +377,27 @@ export default function NewProject() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-blue-600 text-white py-4 rounded-lg font-semibold hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+              style={{
+                width: '100%',
+                backgroundColor: loading ? '#93c5fd' : '#2563eb',
+                color: 'white',
+                padding: '1rem',
+                borderRadius: '0.5rem',
+                fontWeight: '600',
+                fontSize: '1rem',
+                border: 'none',
+                cursor: loading ? 'not-allowed' : 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.5rem'
+              }}
             >
               {loading ? (
                 'Отправка...'
               ) : (
                 <>
-                  <Send className="w-5 h-5 mr-2" />
+                  <Send style={{ width: '20px', height: '20px' }} />
                   Отправить на модерацию
                 </>
               )}

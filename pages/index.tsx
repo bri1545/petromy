@@ -2,12 +2,11 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
-import { ArrowRight, Vote, Users, Building2, TrendingUp, Shield, Lightbulb } from 'lucide-react'
+import { ArrowRight, Vote, Users, Building2, TrendingUp, Shield, Lightbulb, MapPin, Heart } from 'lucide-react'
 import ProjectCard from '../components/ProjectCard'
 
 const Home: NextPage = () => {
   const [featuredProjects, setFeaturedProjects] = useState([])
-  const [stats, setStats] = useState({ projects: 0, votes: 0, users: 0 })
 
   useEffect(() => {
     fetch('/api/projects?limit=3&status=VOTING')
@@ -24,121 +23,271 @@ const Home: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <div className="-mt-6 -mx-4 sm:-mx-6 lg:-mx-8">
-        <section className="bg-gradient-to-br from-blue-700 via-blue-800 to-blue-900 text-white py-20 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-5xl mx-auto text-center">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6">
+      <div style={{ marginTop: '-1.5rem', marginLeft: '-1rem', marginRight: '-1rem' }}>
+        <section style={{ 
+          position: 'relative', 
+          minHeight: '550px', 
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'center',
+          overflow: 'hidden'
+        }}>
+          <div style={{
+            position: 'absolute',
+            inset: 0,
+            backgroundImage: 'url(/city-background.jpg)',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat'
+          }} />
+          <div style={{
+            position: 'absolute',
+            inset: 0,
+            backgroundColor: 'rgba(30, 41, 59, 0.85)'
+          }} />
+          
+          <div style={{ 
+            position: 'relative', 
+            zIndex: 10, 
+            maxWidth: '64rem', 
+            margin: '0 auto', 
+            textAlign: 'center',
+            padding: '5rem 1rem'
+          }}>
+            <div style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              backgroundColor: '#3b82f6',
+              color: 'white',
+              padding: '0.5rem 1rem',
+              borderRadius: '9999px',
+              marginBottom: '1.5rem'
+            }}>
+              <MapPin style={{ width: '16px', height: '16px' }} />
+              <span style={{ fontSize: '0.875rem', fontWeight: '500' }}>Петропавловск, Казахстан</span>
+            </div>
+            
+            <h1 style={{ 
+              fontSize: '3rem', 
+              fontWeight: 'bold', 
+              marginBottom: '1.5rem', 
+              color: 'white' 
+            }}>
               Мой Петропавловск
             </h1>
-            <p className="text-xl sm:text-2xl text-blue-100 mb-8 max-w-3xl mx-auto">
+            <p style={{ 
+              fontSize: '1.25rem', 
+              color: '#cbd5e1', 
+              marginBottom: '2.5rem', 
+              maxWidth: '48rem', 
+              margin: '0 auto 2.5rem' 
+            }}>
               Платформа гражданских инициатив для развития нашего города. 
               Предлагайте идеи, голосуйте за лучшие проекты, меняйте город вместе!
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem', justifyContent: 'center' }}>
               <Link
                 href="/projects"
-                className="inline-flex items-center justify-center bg-white text-blue-700 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-blue-50 transition-colors"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: 'white',
+                  color: '#1e293b',
+                  padding: '1rem 2rem',
+                  borderRadius: '0.5rem',
+                  fontWeight: '600',
+                  fontSize: '1.125rem',
+                  textDecoration: 'none',
+                  boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
+                }}
               >
                 Смотреть проекты
-                <ArrowRight className="ml-2 w-5 h-5" />
+                <ArrowRight style={{ marginLeft: '0.5rem', width: '20px', height: '20px' }} />
               </Link>
               <Link
                 href="/projects/new"
-                className="inline-flex items-center justify-center bg-blue-600 text-white px-8 py-4 rounded-lg font-semibold text-lg hover:bg-blue-500 transition-colors border-2 border-blue-400"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: '#3b82f6',
+                  color: 'white',
+                  padding: '1rem 2rem',
+                  borderRadius: '0.5rem',
+                  fontWeight: '600',
+                  fontSize: '1.125rem',
+                  textDecoration: 'none',
+                  boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
+                }}
               >
                 Подать свой проект
-                <Lightbulb className="ml-2 w-5 h-5" />
+                <Lightbulb style={{ marginLeft: '0.5rem', width: '20px', height: '20px' }} />
               </Link>
             </div>
           </div>
         </section>
 
-        <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
+        <section style={{ padding: '4rem 1rem', backgroundColor: 'white' }}>
+          <div style={{ maxWidth: '72rem', margin: '0 auto' }}>
+            <h2 style={{ fontSize: '1.875rem', fontWeight: 'bold', textAlign: 'center', color: '#1e293b', marginBottom: '1rem' }}>
               Как это работает
             </h2>
-            <div className="grid md:grid-cols-4 gap-8">
-              <div className="text-center">
-                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Lightbulb className="w-8 h-8 text-blue-600" />
+            <p style={{ textAlign: 'center', color: '#64748b', marginBottom: '3rem', maxWidth: '32rem', margin: '0 auto 3rem' }}>
+              Простой путь от идеи до реализации проекта
+            </p>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '2rem' }}>
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ 
+                  width: '80px', 
+                  height: '80px', 
+                  backgroundColor: '#e0f2fe', 
+                  borderRadius: '1rem', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center', 
+                  margin: '0 auto 1rem' 
+                }}>
+                  <Lightbulb style={{ width: '40px', height: '40px', color: '#0284c7' }} />
                 </div>
-                <h3 className="text-lg font-semibold mb-2">1. Подайте идею</h3>
-                <p className="text-gray-600">Опишите ваш проект для улучшения города</p>
+                <h3 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '0.5rem', color: '#1e293b' }}>1. Подайте идею</h3>
+                <p style={{ color: '#64748b' }}>Опишите ваш проект для улучшения города</p>
               </div>
-              <div className="text-center">
-                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Shield className="w-8 h-8 text-green-600" />
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ 
+                  width: '80px', 
+                  height: '80px', 
+                  backgroundColor: '#f1f5f9', 
+                  borderRadius: '1rem', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center', 
+                  margin: '0 auto 1rem' 
+                }}>
+                  <Shield style={{ width: '40px', height: '40px', color: '#475569' }} />
                 </div>
-                <h3 className="text-lg font-semibold mb-2">2. Модерация</h3>
-                <p className="text-gray-600">Проект проверяется модераторами и AI</p>
+                <h3 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '0.5rem', color: '#1e293b' }}>2. Модерация</h3>
+                <p style={{ color: '#64748b' }}>Проект проверяется модераторами и AI</p>
               </div>
-              <div className="text-center">
-                <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Vote className="w-8 h-8 text-purple-600" />
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ 
+                  width: '80px', 
+                  height: '80px', 
+                  backgroundColor: '#dbeafe', 
+                  borderRadius: '1rem', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center', 
+                  margin: '0 auto 1rem' 
+                }}>
+                  <Vote style={{ width: '40px', height: '40px', color: '#2563eb' }} />
                 </div>
-                <h3 className="text-lg font-semibold mb-2">3. Голосование</h3>
-                <p className="text-gray-600">Жители голосуют за лучшие проекты</p>
+                <h3 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '0.5rem', color: '#1e293b' }}>3. Голосование</h3>
+                <p style={{ color: '#64748b' }}>Жители голосуют за лучшие проекты</p>
               </div>
-              <div className="text-center">
-                <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <TrendingUp className="w-8 h-8 text-yellow-600" />
+              <div style={{ textAlign: 'center' }}>
+                <div style={{ 
+                  width: '80px', 
+                  height: '80px', 
+                  backgroundColor: '#e2e8f0', 
+                  borderRadius: '1rem', 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center', 
+                  margin: '0 auto 1rem' 
+                }}>
+                  <TrendingUp style={{ width: '40px', height: '40px', color: '#334155' }} />
                 </div>
-                <h3 className="text-lg font-semibold mb-2">4. Реализация</h3>
-                <p className="text-gray-600">Сбор средств и воплощение проекта</p>
+                <h3 style={{ fontSize: '1.125rem', fontWeight: '600', marginBottom: '0.5rem', color: '#1e293b' }}>4. Реализация</h3>
+                <p style={{ color: '#64748b' }}>Сбор средств и воплощение проекта</p>
               </div>
             </div>
           </div>
         </section>
 
-        <section className="py-16 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-6xl mx-auto">
-            <div className="grid md:grid-cols-2 gap-8 mb-12">
-              <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-8">
-                <div className="flex items-center mb-4">
-                  <Users className="w-10 h-10 text-blue-600 mr-4" />
-                  <h3 className="text-2xl font-bold text-gray-900">Для граждан</h3>
+        <section style={{ padding: '4rem 1rem', backgroundColor: '#f8fafc' }}>
+          <div style={{ maxWidth: '72rem', margin: '0 auto' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem' }}>
+              <div style={{ 
+                backgroundColor: 'white', 
+                borderRadius: '1rem', 
+                padding: '2rem', 
+                boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+                border: '1px solid #e2e8f0'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', marginBottom: '1rem' }}>
+                  <div style={{ 
+                    width: '56px', 
+                    height: '56px', 
+                    backgroundColor: '#3b82f6', 
+                    borderRadius: '0.75rem', 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    justifyContent: 'center', 
+                    marginRight: '1rem' 
+                  }}>
+                    <Users style={{ width: '28px', height: '28px', color: 'white' }} />
+                  </div>
+                  <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#1e293b' }}>Для граждан</h3>
                 </div>
-                <p className="text-gray-700 mb-4">
+                <p style={{ color: '#64748b', marginBottom: '1.5rem' }}>
                   Предлагайте идеи по благоустройству дворов, парков, улиц. 
                   Голосуйте за проекты соседей и участвуйте в развитии города.
                 </p>
-                <ul className="space-y-2 text-gray-600">
-                  <li className="flex items-center">
-                    <span className="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
+                <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                  <li style={{ display: 'flex', alignItems: 'center', marginBottom: '0.75rem', color: '#475569' }}>
+                    <span style={{ width: '10px', height: '10px', backgroundColor: '#3b82f6', borderRadius: '50%', marginRight: '0.75rem' }}></span>
                     Благоустройство территорий
                   </li>
-                  <li className="flex items-center">
-                    <span className="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
+                  <li style={{ display: 'flex', alignItems: 'center', marginBottom: '0.75rem', color: '#475569' }}>
+                    <span style={{ width: '10px', height: '10px', backgroundColor: '#3b82f6', borderRadius: '50%', marginRight: '0.75rem' }}></span>
                     Социальные проекты
                   </li>
-                  <li className="flex items-center">
-                    <span className="w-2 h-2 bg-blue-500 rounded-full mr-2"></span>
+                  <li style={{ display: 'flex', alignItems: 'center', color: '#475569' }}>
+                    <span style={{ width: '10px', height: '10px', backgroundColor: '#3b82f6', borderRadius: '50%', marginRight: '0.75rem' }}></span>
                     Экологические инициативы
                   </li>
                 </ul>
               </div>
 
-              <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-2xl p-8">
-                <div className="flex items-center mb-4">
-                  <Building2 className="w-10 h-10 text-purple-600 mr-4" />
-                  <h3 className="text-2xl font-bold text-gray-900">Для компаний</h3>
+              <div style={{ 
+                backgroundColor: 'white', 
+                borderRadius: '1rem', 
+                padding: '2rem', 
+                boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
+                border: '1px solid #e2e8f0'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', marginBottom: '1rem' }}>
+                  <div style={{ 
+                    width: '56px', 
+                    height: '56px', 
+                    backgroundColor: '#64748b', 
+                    borderRadius: '0.75rem', 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    justifyContent: 'center', 
+                    marginRight: '1rem' 
+                  }}>
+                    <Building2 style={{ width: '28px', height: '28px', color: 'white' }} />
+                  </div>
+                  <h3 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#1e293b' }}>Для компаний</h3>
                 </div>
-                <p className="text-gray-700 mb-4">
+                <p style={{ color: '#64748b', marginBottom: '1.5rem' }}>
                   Предлагайте крупные проекты: торговые центры, спортивные комплексы, 
                   инфраструктурные объекты с полным анализом от AI.
                 </p>
-                <ul className="space-y-2 text-gray-600">
-                  <li className="flex items-center">
-                    <span className="w-2 h-2 bg-purple-500 rounded-full mr-2"></span>
+                <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+                  <li style={{ display: 'flex', alignItems: 'center', marginBottom: '0.75rem', color: '#475569' }}>
+                    <span style={{ width: '10px', height: '10px', backgroundColor: '#64748b', borderRadius: '50%', marginRight: '0.75rem' }}></span>
                     Коммерческие объекты
                   </li>
-                  <li className="flex items-center">
-                    <span className="w-2 h-2 bg-purple-500 rounded-full mr-2"></span>
+                  <li style={{ display: 'flex', alignItems: 'center', marginBottom: '0.75rem', color: '#475569' }}>
+                    <span style={{ width: '10px', height: '10px', backgroundColor: '#64748b', borderRadius: '50%', marginRight: '0.75rem' }}></span>
                     AI-анализ для инвесторов
                   </li>
-                  <li className="flex items-center">
-                    <span className="w-2 h-2 bg-purple-500 rounded-full mr-2"></span>
+                  <li style={{ display: 'flex', alignItems: 'center', color: '#475569' }}>
+                    <span style={{ width: '10px', height: '10px', backgroundColor: '#64748b', borderRadius: '50%', marginRight: '0.75rem' }}></span>
                     Привлечение финансирования
                   </li>
                 </ul>
@@ -148,19 +297,19 @@ const Home: NextPage = () => {
         </section>
 
         {featuredProjects.length > 0 && (
-          <section className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-50">
-            <div className="max-w-6xl mx-auto">
-              <div className="flex items-center justify-between mb-8">
-                <h2 className="text-3xl font-bold text-gray-900">Активное голосование</h2>
+          <section style={{ padding: '4rem 1rem', backgroundColor: 'white' }}>
+            <div style={{ maxWidth: '72rem', margin: '0 auto' }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '2rem' }}>
+                <h2 style={{ fontSize: '1.875rem', fontWeight: 'bold', color: '#1e293b' }}>Активное голосование</h2>
                 <Link
                   href="/projects?status=VOTING"
-                  className="text-blue-600 hover:text-blue-700 font-medium flex items-center"
+                  style={{ color: '#3b82f6', fontWeight: '500', display: 'flex', alignItems: 'center', textDecoration: 'none' }}
                 >
                   Все проекты
-                  <ArrowRight className="ml-1 w-4 h-4" />
+                  <ArrowRight style={{ marginLeft: '0.25rem', width: '16px', height: '16px' }} />
                 </Link>
               </div>
-              <div className="grid md:grid-cols-3 gap-6">
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '1.5rem' }}>
                 {featuredProjects.map((project: any) => (
                   <ProjectCard key={project.id} project={project} />
                 ))}
@@ -169,18 +318,41 @@ const Home: NextPage = () => {
           </section>
         )}
 
-        <section className="py-16 px-4 sm:px-6 lg:px-8 bg-blue-700 text-white">
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-3xl font-bold mb-4">Готовы изменить город?</h2>
-            <p className="text-xl text-blue-100 mb-8">
+        <section style={{ padding: '5rem 1rem', backgroundColor: '#1e293b', color: 'white' }}>
+          <div style={{ maxWidth: '48rem', margin: '0 auto', textAlign: 'center' }}>
+            <div style={{ 
+              display: 'inline-flex', 
+              alignItems: 'center', 
+              justifyContent: 'center', 
+              width: '64px', 
+              height: '64px', 
+              backgroundColor: '#3b82f6', 
+              borderRadius: '1rem', 
+              marginBottom: '1.5rem' 
+            }}>
+              <Heart style={{ width: '32px', height: '32px', color: 'white' }} />
+            </div>
+            <h2 style={{ fontSize: '1.875rem', fontWeight: 'bold', marginBottom: '1rem' }}>Готовы изменить город?</h2>
+            <p style={{ fontSize: '1.25rem', color: '#94a3b8', marginBottom: '2rem' }}>
               Присоединяйтесь к платформе и начните влиять на развитие Петропавловска уже сегодня
             </p>
             <Link
               href="/auth/register"
-              className="inline-flex items-center bg-white text-blue-700 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-blue-50 transition-colors"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                backgroundColor: '#3b82f6',
+                color: 'white',
+                padding: '1rem 2rem',
+                borderRadius: '0.5rem',
+                fontWeight: '600',
+                fontSize: '1.125rem',
+                textDecoration: 'none',
+                boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
+              }}
             >
-              Зарегистрироваться
-              <ArrowRight className="ml-2 w-5 h-5" />
+              Зарегистрироваться бесплатно
+              <ArrowRight style={{ marginLeft: '0.5rem', width: '20px', height: '20px' }} />
             </Link>
           </div>
         </section>

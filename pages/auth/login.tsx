@@ -42,54 +42,101 @@ export default function Login() {
         <title>Вход - Мой Петропавловск</title>
       </Head>
 
-      <div className="min-h-[70vh] flex items-center justify-center">
-        <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md">
-          <div className="text-center mb-8">
-            <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <LogIn className="w-8 h-8 text-blue-600" />
+      <div style={{ minHeight: '70vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ 
+          backgroundColor: 'white', 
+          borderRadius: '1rem', 
+          boxShadow: '0 10px 25px -5px rgba(0,0,0,0.1)', 
+          padding: '2.5rem', 
+          width: '100%', 
+          maxWidth: '28rem',
+          border: '1px solid #e2e8f0'
+        }}>
+          <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+            <div style={{ 
+              width: '64px', 
+              height: '64px', 
+              backgroundColor: '#dbeafe', 
+              borderRadius: '50%', 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center', 
+              margin: '0 auto 1rem' 
+            }}>
+              <LogIn style={{ width: '32px', height: '32px', color: '#2563eb' }} />
             </div>
-            <h1 className="text-2xl font-bold text-gray-900">Вход в аккаунт</h1>
-            <p className="text-gray-600 mt-2">Войдите, чтобы продолжить</p>
+            <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#1e293b' }}>Вход в аккаунт</h1>
+            <p style={{ color: '#64748b', marginTop: '0.5rem' }}>Войдите, чтобы продолжить</p>
           </div>
 
           {error && (
-            <div className="bg-red-50 text-red-600 p-4 rounded-lg mb-6 flex items-center">
-              <AlertCircle className="w-5 h-5 mr-2 flex-shrink-0" />
+            <div style={{ 
+              backgroundColor: '#fef2f2', 
+              color: '#dc2626', 
+              padding: '1rem', 
+              borderRadius: '0.5rem', 
+              marginBottom: '1.5rem', 
+              display: 'flex', 
+              alignItems: 'center' 
+            }}>
+              <AlertCircle style={{ width: '20px', height: '20px', marginRight: '0.5rem', flexShrink: 0 }} />
               {error}
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+          <form onSubmit={handleSubmit}>
+            <div style={{ marginBottom: '1.5rem' }}>
+              <label htmlFor="email" style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#374151', marginBottom: '0.5rem' }}>
                 Email
               </label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <div style={{ position: 'relative' }}>
+                <Mail style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#9ca3af', width: '20px', height: '20px' }} />
                 <input
                   id="email"
                   type="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  style={{ 
+                    width: '100%', 
+                    paddingLeft: '2.75rem', 
+                    paddingRight: '1rem', 
+                    paddingTop: '0.875rem', 
+                    paddingBottom: '0.875rem', 
+                    border: '1px solid #d1d5db', 
+                    borderRadius: '0.5rem', 
+                    fontSize: '1rem',
+                    outline: 'none',
+                    boxSizing: 'border-box'
+                  }}
                   placeholder="your@email.com"
                   required
                 />
               </div>
             </div>
 
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+            <div style={{ marginBottom: '1.5rem' }}>
+              <label htmlFor="password" style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#374151', marginBottom: '0.5rem' }}>
                 Пароль
               </label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <div style={{ position: 'relative' }}>
+                <Lock style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#9ca3af', width: '20px', height: '20px' }} />
                 <input
                   id="password"
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  style={{ 
+                    width: '100%', 
+                    paddingLeft: '2.75rem', 
+                    paddingRight: '1rem', 
+                    paddingTop: '0.875rem', 
+                    paddingBottom: '0.875rem', 
+                    border: '1px solid #d1d5db', 
+                    borderRadius: '0.5rem', 
+                    fontSize: '1rem',
+                    outline: 'none',
+                    boxSizing: 'border-box'
+                  }}
                   placeholder="Ваш пароль"
                   required
                 />
@@ -99,16 +146,31 @@ export default function Login() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              style={{ 
+                width: '100%', 
+                backgroundColor: loading ? '#93c5fd' : '#2563eb', 
+                color: 'white', 
+                padding: '1rem', 
+                borderRadius: '0.5rem', 
+                fontWeight: '600',
+                fontSize: '1rem',
+                border: 'none',
+                cursor: loading ? 'not-allowed' : 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.5rem'
+              }}
             >
+              <LogIn style={{ width: '20px', height: '20px' }} />
               {loading ? 'Вход...' : 'Войти'}
             </button>
           </form>
 
-          <div className="mt-6 text-center">
-            <p className="text-gray-600">
+          <div style={{ marginTop: '1.5rem', textAlign: 'center' }}>
+            <p style={{ color: '#64748b' }}>
               Нет аккаунта?{' '}
-              <Link href="/auth/register" className="text-blue-600 hover:text-blue-700 font-medium">
+              <Link href="/auth/register" style={{ color: '#2563eb', fontWeight: '500', textDecoration: 'none' }}>
                 Зарегистрироваться
               </Link>
             </p>

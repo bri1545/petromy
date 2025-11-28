@@ -73,75 +73,134 @@ export default function Register() {
     }
   }
 
+  const inputStyle = { 
+    width: '100%', 
+    paddingLeft: '2.75rem', 
+    paddingRight: '1rem', 
+    paddingTop: '0.875rem', 
+    paddingBottom: '0.875rem', 
+    border: '1px solid #d1d5db', 
+    borderRadius: '0.5rem', 
+    fontSize: '1rem',
+    outline: 'none',
+    boxSizing: 'border-box' as const
+  }
+
+  const inputStyleNoIcon = { 
+    width: '100%', 
+    paddingLeft: '1rem', 
+    paddingRight: '1rem', 
+    paddingTop: '0.875rem', 
+    paddingBottom: '0.875rem', 
+    border: '1px solid #d1d5db', 
+    borderRadius: '0.5rem', 
+    fontSize: '1rem',
+    outline: 'none',
+    boxSizing: 'border-box' as const
+  }
+
   return (
     <>
       <Head>
         <title>Регистрация - Мой Петропавловск</title>
       </Head>
 
-      <div className="min-h-[70vh] flex items-center justify-center py-8">
-        <div className="bg-white rounded-2xl shadow-xl p-8 w-full max-w-lg">
-          <div className="text-center mb-8">
-            <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <UserPlus className="w-8 h-8 text-blue-600" />
+      <div style={{ minHeight: '70vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem 0' }}>
+        <div style={{ 
+          backgroundColor: 'white', 
+          borderRadius: '1rem', 
+          boxShadow: '0 10px 25px -5px rgba(0,0,0,0.1)', 
+          padding: '2.5rem', 
+          width: '100%', 
+          maxWidth: '32rem',
+          border: '1px solid #e2e8f0'
+        }}>
+          <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
+            <div style={{ 
+              width: '64px', 
+              height: '64px', 
+              backgroundColor: '#dbeafe', 
+              borderRadius: '50%', 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center', 
+              margin: '0 auto 1rem' 
+            }}>
+              <UserPlus style={{ width: '32px', height: '32px', color: '#2563eb' }} />
             </div>
-            <h1 className="text-2xl font-bold text-gray-900">Регистрация</h1>
-            <p className="text-gray-600 mt-2">Создайте аккаунт для участия</p>
+            <h1 style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#1e293b' }}>Регистрация</h1>
+            <p style={{ color: '#64748b', marginTop: '0.5rem' }}>Создайте аккаунт для участия</p>
           </div>
 
           {error && (
-            <div className="bg-red-50 text-red-600 p-4 rounded-lg mb-6 flex items-center">
-              <AlertCircle className="w-5 h-5 mr-2 flex-shrink-0" />
+            <div style={{ 
+              backgroundColor: '#fef2f2', 
+              color: '#dc2626', 
+              padding: '1rem', 
+              borderRadius: '0.5rem', 
+              marginBottom: '1.5rem', 
+              display: 'flex', 
+              alignItems: 'center' 
+            }}>
+              <AlertCircle style={{ width: '20px', height: '20px', marginRight: '0.5rem', flexShrink: 0 }} />
               {error}
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-5">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+          <form onSubmit={handleSubmit}>
+            <div style={{ marginBottom: '1.25rem' }}>
+              <label style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#374151', marginBottom: '0.5rem' }}>
                 Тип аккаунта
               </label>
-              <div className="grid grid-cols-2 gap-4">
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
                 <button
                   type="button"
                   onClick={() => setFormData({ ...formData, role: 'CITIZEN' })}
-                  className={`p-4 rounded-lg border-2 text-center transition-colors ${
-                    formData.role === 'CITIZEN'
-                      ? 'border-blue-500 bg-blue-50 text-blue-700'
-                      : 'border-gray-200 hover:border-gray-300'
-                  }`}
+                  style={{
+                    padding: '1rem',
+                    borderRadius: '0.5rem',
+                    border: formData.role === 'CITIZEN' ? '2px solid #2563eb' : '2px solid #e2e8f0',
+                    backgroundColor: formData.role === 'CITIZEN' ? '#eff6ff' : 'white',
+                    color: formData.role === 'CITIZEN' ? '#1e40af' : '#475569',
+                    textAlign: 'center',
+                    cursor: 'pointer'
+                  }}
                 >
-                  <User className="w-6 h-6 mx-auto mb-2" />
-                  <span className="font-medium">Гражданин</span>
+                  <User style={{ width: '24px', height: '24px', margin: '0 auto 0.5rem' }} />
+                  <span style={{ fontWeight: '500', display: 'block' }}>Гражданин</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => setFormData({ ...formData, role: 'COMPANY' })}
-                  className={`p-4 rounded-lg border-2 text-center transition-colors ${
-                    formData.role === 'COMPANY'
-                      ? 'border-purple-500 bg-purple-50 text-purple-700'
-                      : 'border-gray-200 hover:border-gray-300'
-                  }`}
+                  style={{
+                    padding: '1rem',
+                    borderRadius: '0.5rem',
+                    border: formData.role === 'COMPANY' ? '2px solid #475569' : '2px solid #e2e8f0',
+                    backgroundColor: formData.role === 'COMPANY' ? '#f1f5f9' : 'white',
+                    color: formData.role === 'COMPANY' ? '#1e293b' : '#475569',
+                    textAlign: 'center',
+                    cursor: 'pointer'
+                  }}
                 >
-                  <Building2 className="w-6 h-6 mx-auto mb-2" />
-                  <span className="font-medium">Компания</span>
+                  <Building2 style={{ width: '24px', height: '24px', margin: '0 auto 0.5rem' }} />
+                  <span style={{ fontWeight: '500', display: 'block' }}>Компания</span>
                 </button>
               </div>
             </div>
 
-            <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+            <div style={{ marginBottom: '1.25rem' }}>
+              <label htmlFor="name" style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#374151', marginBottom: '0.5rem' }}>
                 {formData.role === 'COMPANY' ? 'Ваше имя (контактное лицо)' : 'Ваше имя'}
               </label>
-              <div className="relative">
-                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <div style={{ position: 'relative' }}>
+                <User style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#9ca3af', width: '20px', height: '20px' }} />
                 <input
                   id="name"
                   name="name"
                   type="text"
                   value={formData.name}
                   onChange={handleChange}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  style={inputStyle}
                   placeholder="Иван Иванов"
                   required
                 />
@@ -150,27 +209,27 @@ export default function Register() {
 
             {formData.role === 'COMPANY' && (
               <>
-                <div>
-                  <label htmlFor="companyName" className="block text-sm font-medium text-gray-700 mb-2">
+                <div style={{ marginBottom: '1.25rem' }}>
+                  <label htmlFor="companyName" style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#374151', marginBottom: '0.5rem' }}>
                     Название компании
                   </label>
-                  <div className="relative">
-                    <Building2 className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                  <div style={{ position: 'relative' }}>
+                    <Building2 style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#9ca3af', width: '20px', height: '20px' }} />
                     <input
                       id="companyName"
                       name="companyName"
                       type="text"
                       value={formData.companyName}
                       onChange={handleChange}
-                      className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                      style={inputStyle}
                       placeholder="ТОО Компания"
                       required
                     />
                   </div>
                 </div>
 
-                <div>
-                  <label htmlFor="companyInn" className="block text-sm font-medium text-gray-700 mb-2">
+                <div style={{ marginBottom: '1.25rem' }}>
+                  <label htmlFor="companyInn" style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#374151', marginBottom: '0.5rem' }}>
                     ИИН/БИН
                   </label>
                   <input
@@ -179,7 +238,7 @@ export default function Register() {
                     type="text"
                     value={formData.companyInn}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    style={inputStyleNoIcon}
                     placeholder="123456789012"
                     required
                   />
@@ -187,101 +246,122 @@ export default function Register() {
               </>
             )}
 
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+            <div style={{ marginBottom: '1.25rem' }}>
+              <label htmlFor="email" style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#374151', marginBottom: '0.5rem' }}>
                 Email
               </label>
-              <div className="relative">
-                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <div style={{ position: 'relative' }}>
+                <Mail style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#9ca3af', width: '20px', height: '20px' }} />
                 <input
                   id="email"
                   name="email"
                   type="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  style={inputStyle}
                   placeholder="your@email.com"
                   required
                 />
               </div>
             </div>
 
-            <div>
-              <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
+            <div style={{ marginBottom: '1.25rem' }}>
+              <label htmlFor="phone" style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#374151', marginBottom: '0.5rem' }}>
                 Телефон (необязательно)
               </label>
-              <div className="relative">
-                <Phone className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <div style={{ position: 'relative' }}>
+                <Phone style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#9ca3af', width: '20px', height: '20px' }} />
                 <input
                   id="phone"
                   name="phone"
                   type="tel"
                   value={formData.phone}
                   onChange={handleChange}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  style={inputStyle}
                   placeholder="+7 777 123 4567"
                 />
               </div>
             </div>
 
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+            <div style={{ marginBottom: '1.25rem' }}>
+              <label htmlFor="password" style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#374151', marginBottom: '0.5rem' }}>
                 Пароль
               </label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <div style={{ position: 'relative' }}>
+                <Lock style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#9ca3af', width: '20px', height: '20px' }} />
                 <input
                   id="password"
                   name="password"
                   type="password"
                   value={formData.password}
                   onChange={handleChange}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  style={inputStyle}
                   placeholder="Минимум 6 символов"
                   required
                 />
               </div>
             </div>
 
-            <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-2">
+            <div style={{ marginBottom: '1.25rem' }}>
+              <label htmlFor="confirmPassword" style={{ display: 'block', fontSize: '0.875rem', fontWeight: '500', color: '#374151', marginBottom: '0.5rem' }}>
                 Подтвердите пароль
               </label>
-              <div className="relative">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+              <div style={{ position: 'relative' }}>
+                <Lock style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', color: '#9ca3af', width: '20px', height: '20px' }} />
                 <input
                   id="confirmPassword"
                   name="confirmPassword"
                   type="password"
                   value={formData.confirmPassword}
                   onChange={handleChange}
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  style={inputStyle}
                   placeholder="Повторите пароль"
                   required
                 />
               </div>
             </div>
 
-            <div className="bg-blue-50 p-4 rounded-lg">
-              <div className="flex items-center text-blue-700">
-                <CheckCircle className="w-5 h-5 mr-2" />
-                <span className="text-sm font-medium">При регистрации вы получите 5 бесплатных токенов для голосования</span>
+            <div style={{ 
+              backgroundColor: '#eff6ff', 
+              padding: '1rem', 
+              borderRadius: '0.5rem', 
+              marginBottom: '1.5rem',
+              border: '1px solid #bfdbfe'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', color: '#1e40af' }}>
+                <CheckCircle style={{ width: '20px', height: '20px', marginRight: '0.5rem' }} />
+                <span style={{ fontSize: '0.875rem', fontWeight: '500' }}>При регистрации вы получите 5 бесплатных токенов для голосования</span>
               </div>
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              style={{ 
+                width: '100%', 
+                backgroundColor: loading ? '#93c5fd' : '#2563eb', 
+                color: 'white', 
+                padding: '1rem', 
+                borderRadius: '0.5rem', 
+                fontWeight: '600',
+                fontSize: '1rem',
+                border: 'none',
+                cursor: loading ? 'not-allowed' : 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.5rem'
+              }}
             >
+              <UserPlus style={{ width: '20px', height: '20px' }} />
               {loading ? 'Регистрация...' : 'Зарегистрироваться'}
             </button>
           </form>
 
-          <div className="mt-6 text-center">
-            <p className="text-gray-600">
+          <div style={{ marginTop: '1.5rem', textAlign: 'center' }}>
+            <p style={{ color: '#64748b' }}>
               Уже есть аккаунт?{' '}
-              <Link href="/auth/login" className="text-blue-600 hover:text-blue-700 font-medium">
+              <Link href="/auth/login" style={{ color: '#2563eb', fontWeight: '500', textDecoration: 'none' }}>
                 Войти
               </Link>
             </p>

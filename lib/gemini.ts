@@ -11,9 +11,14 @@ export async function analyzeProject(project: {
   benefits?: string | null
   isCompanyProject: boolean
 }) {
-  const model = genAI.getGenerativeModel({ model: 'gemini-pro' })
+  if (!process.env.GEMINI_API_KEY) {
+    console.log('GEMINI_API_KEY not configured')
+    return null
+  }
 
-  const prompt = `Проанализируй следующий городской проект для города Петропавловск и предоставь структурированный анализ на русском языке:
+  const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' })
+
+  const prompt = `Проанализируй следующий городской проект для города Петропавловск (Казахстан) и предоставь структурированный анализ на русском языке:
 
 Название: ${project.title}
 Описание: ${project.description}
@@ -54,7 +59,11 @@ ${project.benefits ? `Преимущества по мнению автора: $
 }
 
 export async function moderateComment(comment: string) {
-  const model = genAI.getGenerativeModel({ model: 'gemini-pro' })
+  if (!process.env.GEMINI_API_KEY) {
+    return { isAppropriate: true, reason: '', toxicityScore: 0 }
+  }
+
+  const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' })
 
   const prompt = `Проверь следующий комментарий на соответствие правилам сообщества. Комментарий должен быть конструктивным, без оскорблений и спама.
 

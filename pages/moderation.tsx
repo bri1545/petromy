@@ -5,7 +5,7 @@ import Head from 'next/head'
 import Link from 'next/link'
 import { 
   Shield, FileText, MessageCircle, CheckCircle, XCircle, 
-  Loader2, Eye, Brain, AlertCircle, User, Building2 
+  Loader2, Eye, Brain, User, Building2, Play
 } from 'lucide-react'
 
 const categoryLabels: Record<string, string> = {
@@ -79,10 +79,15 @@ export default function Moderation() {
   const handleAnalyze = async (projectId: string) => {
     setAnalyzing(projectId)
     try {
-      await fetch(`/api/projects/${projectId}/analyze`, {
-        method: 'POST'
+      const res = await fetch('/api/moderation/approve', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: 'project', id: projectId, action: 'analyze' })
       })
-      fetchData()
+      const data = await res.json()
+      if (data.success) {
+        fetchData()
+      }
     } catch (error) {
       console.error('Error analyzing:', error)
     } finally {
@@ -92,11 +97,25 @@ export default function Moderation() {
 
   if (authStatus === 'loading' || loading) {
     return (
-      <div className="flex items-center justify-center py-20">
-        <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '5rem 0' }}>
+        <Loader2 style={{ width: '32px', height: '32px', color: '#2563eb', animation: 'spin 1s linear infinite' }} />
       </div>
     )
   }
+
+  const buttonStyle = (color: string, hoverColor: string) => ({
+    backgroundColor: color,
+    color: 'white',
+    padding: '0.5rem 1rem',
+    borderRadius: '0.5rem',
+    fontWeight: '500',
+    border: 'none',
+    cursor: 'pointer',
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '0.5rem',
+    fontSize: '0.875rem'
+  })
 
   return (
     <>
@@ -104,103 +123,148 @@ export default function Moderation() {
         <title>Модерация - Мой Петропавловск</title>
       </Head>
 
-      <div className="mb-8">
-        <div className="flex items-center mb-2">
-          <Shield className="w-8 h-8 text-blue-600 mr-3" />
-          <h1 className="text-3xl font-bold text-gray-900">Панель модерации</h1>
+      <div style={{ marginBottom: '2rem' }}>
+        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '0.5rem' }}>
+          <Shield style={{ width: '32px', height: '32px', color: '#2563eb', marginRight: '0.75rem' }} />
+          <h1 style={{ fontSize: '1.875rem', fontWeight: 'bold', color: '#1e293b' }}>Панель модерации</h1>
         </div>
-        <p className="text-gray-600">Проверяйте и одобряйте проекты и комментарии</p>
+        <p style={{ color: '#64748b' }}>Проверяйте и одобряйте проекты и комментарии</p>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm mb-6">
-        <div className="flex border-b">
+      <div style={{ backgroundColor: 'white', borderRadius: '0.75rem', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', marginBottom: '1.5rem' }}>
+        <div style={{ display: 'flex', borderBottom: '1px solid #e2e8f0' }}>
           <button
             onClick={() => setActiveTab('projects')}
-            className={`flex items-center px-6 py-4 font-medium ${
-              activeTab === 'projects'
-                ? 'text-blue-600 border-b-2 border-blue-600'
-                : 'text-gray-600 hover:text-gray-900'
-            }`}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              padding: '1rem 1.5rem',
+              fontWeight: '500',
+              color: activeTab === 'projects' ? '#2563eb' : '#64748b',
+              borderBottom: activeTab === 'projects' ? '2px solid #2563eb' : 'none',
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer'
+            }}
           >
-            <FileText className="w-5 h-5 mr-2" />
+            <FileText style={{ width: '20px', height: '20px', marginRight: '0.5rem' }} />
             Проекты ({projects.length})
           </button>
           <button
             onClick={() => setActiveTab('comments')}
-            className={`flex items-center px-6 py-4 font-medium ${
-              activeTab === 'comments'
-                ? 'text-blue-600 border-b-2 border-blue-600'
-                : 'text-gray-600 hover:text-gray-900'
-            }`}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              padding: '1rem 1.5rem',
+              fontWeight: '500',
+              color: activeTab === 'comments' ? '#2563eb' : '#64748b',
+              borderBottom: activeTab === 'comments' ? '2px solid #2563eb' : 'none',
+              background: 'none',
+              border: 'none',
+              cursor: 'pointer'
+            }}
           >
-            <MessageCircle className="w-5 h-5 mr-2" />
+            <MessageCircle style={{ width: '20px', height: '20px', marginRight: '0.5rem' }} />
             Комментарии ({comments.length})
           </button>
         </div>
       </div>
 
       {activeTab === 'projects' && (
-        <div className="space-y-4">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           {projects.length === 0 ? (
-            <div className="bg-white rounded-xl shadow-sm p-12 text-center">
-              <CheckCircle className="w-16 h-16 text-green-400 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">Все проекты проверены</h3>
-              <p className="text-gray-600">Нет проектов, ожидающих модерации</p>
+            <div style={{ backgroundColor: 'white', borderRadius: '0.75rem', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', padding: '3rem', textAlign: 'center' }}>
+              <CheckCircle style={{ width: '64px', height: '64px', color: '#86efac', margin: '0 auto 1rem' }} />
+              <h3 style={{ fontSize: '1.25rem', fontWeight: '600', color: '#1e293b', marginBottom: '0.5rem' }}>Все проекты проверены</h3>
+              <p style={{ color: '#64748b' }}>Нет проектов, ожидающих модерации</p>
             </div>
           ) : (
             projects.map((project: any) => (
-              <div key={project.id} className="bg-white rounded-xl shadow-sm p-6">
-                <div className="flex items-start justify-between mb-4">
+              <div key={project.id} style={{ backgroundColor: 'white', borderRadius: '0.75rem', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', padding: '1.5rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
                   <div>
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="px-2 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700">
+                    <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                      <span style={{ padding: '0.25rem 0.75rem', borderRadius: '9999px', fontSize: '0.75rem', fontWeight: '500', backgroundColor: '#eff6ff', color: '#1e40af' }}>
                         {categoryLabels[project.category] || project.category}
                       </span>
                       {project.isCompanyProject && (
-                        <span className="px-2 py-1 rounded-full text-xs font-medium bg-purple-50 text-purple-700 flex items-center">
-                          <Building2 className="w-3 h-3 mr-1" />
+                        <span style={{ padding: '0.25rem 0.75rem', borderRadius: '9999px', fontSize: '0.75rem', fontWeight: '500', backgroundColor: '#f1f5f9', color: '#475569', display: 'flex', alignItems: 'center' }}>
+                          <Building2 style={{ width: '12px', height: '12px', marginRight: '0.25rem' }} />
                           Компания
                         </span>
                       )}
                     </div>
-                    <h3 className="text-xl font-semibold text-gray-900">{project.title}</h3>
-                    <div className="flex items-center text-sm text-gray-600 mt-1">
-                      <User className="w-4 h-4 mr-1" />
-                      {project.author.companyName || project.author.name} ({project.author.email})
+                    <h3 style={{ fontSize: '1.25rem', fontWeight: '600', color: '#1e293b' }}>{project.title}</h3>
+                    <div style={{ display: 'flex', alignItems: 'center', fontSize: '0.875rem', color: '#64748b', marginTop: '0.25rem' }}>
+                      <User style={{ width: '16px', height: '16px', marginRight: '0.25rem' }} />
+                      {project.author?.companyName || project.author?.name}
                     </div>
                   </div>
                   <Link
                     href={`/projects/${project.id}`}
-                    className="text-blue-600 hover:text-blue-700 flex items-center"
+                    style={{ color: '#2563eb', display: 'flex', alignItems: 'center', textDecoration: 'none', fontSize: '0.875rem' }}
                   >
-                    <Eye className="w-4 h-4 mr-1" />
+                    <Eye style={{ width: '16px', height: '16px', marginRight: '0.25rem' }} />
                     Просмотр
                   </Link>
                 </div>
 
-                <p className="text-gray-700 mb-4 line-clamp-3">{project.description}</p>
+                <p style={{ color: '#475569', marginBottom: '1rem', lineHeight: '1.6' }}>{project.description?.substring(0, 300)}...</p>
 
                 {project.aiAnalysis && (
-                  <div className="bg-blue-50 p-4 rounded-lg mb-4">
-                    <h4 className="font-medium text-blue-900 mb-2 flex items-center">
-                      <Brain className="w-4 h-4 mr-2" />
+                  <div style={{ backgroundColor: '#eff6ff', padding: '1rem', borderRadius: '0.5rem', marginBottom: '1rem', border: '1px solid #bfdbfe' }}>
+                    <h4 style={{ fontWeight: '500', color: '#1e40af', marginBottom: '0.5rem', display: 'flex', alignItems: 'center' }}>
+                      <Brain style={{ width: '16px', height: '16px', marginRight: '0.5rem' }} />
                       AI-анализ
                     </h4>
-                    <p className="text-blue-800 text-sm">{project.aiAnalysis}</p>
+                    <p style={{ color: '#1e40af', fontSize: '0.875rem' }}>{project.aiAnalysis}</p>
+                    
+                    {project.aiPros && (
+                      <div style={{ marginTop: '0.75rem' }}>
+                        <strong style={{ color: '#059669', fontSize: '0.875rem' }}>Плюсы:</strong>
+                        <ul style={{ margin: '0.25rem 0 0 1rem', color: '#475569', fontSize: '0.875rem' }}>
+                          {JSON.parse(project.aiPros).map((pro: string, i: number) => (
+                            <li key={i}>{pro}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                    
+                    {project.aiCons && (
+                      <div style={{ marginTop: '0.5rem' }}>
+                        <strong style={{ color: '#dc2626', fontSize: '0.875rem' }}>Минусы:</strong>
+                        <ul style={{ margin: '0.25rem 0 0 1rem', color: '#475569', fontSize: '0.875rem' }}>
+                          {JSON.parse(project.aiCons).map((con: string, i: number) => (
+                            <li key={i}>{con}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                    
+                    {project.aiRisks && (
+                      <div style={{ marginTop: '0.5rem' }}>
+                        <strong style={{ color: '#d97706', fontSize: '0.875rem' }}>Риски:</strong>
+                        <ul style={{ margin: '0.25rem 0 0 1rem', color: '#475569', fontSize: '0.875rem' }}>
+                          {JSON.parse(project.aiRisks).map((risk: string, i: number) => (
+                            <li key={i}>{risk}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
                   </div>
                 )}
 
-                <div className="flex flex-wrap gap-3">
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem' }}>
                   {!project.aiAnalysis && (
                     <button
                       onClick={() => handleAnalyze(project.id)}
                       disabled={analyzing === project.id}
-                      className="bg-purple-100 text-purple-700 px-4 py-2 rounded-lg font-medium hover:bg-purple-200 disabled:opacity-50 flex items-center"
+                      style={{ ...buttonStyle('#6366f1', '#4f46e5'), opacity: analyzing === project.id ? 0.5 : 1 }}
                     >
                       {analyzing === project.id ? (
-                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                        <Loader2 style={{ width: '16px', height: '16px', animation: 'spin 1s linear infinite' }} />
                       ) : (
-                        <Brain className="w-4 h-4 mr-2" />
+                        <Brain style={{ width: '16px', height: '16px' }} />
                       )}
                       AI-анализ
                     </button>
@@ -209,17 +273,18 @@ export default function Moderation() {
                   <button
                     onClick={() => handleAction('project', project.id, 'approve')}
                     disabled={processing === project.id}
-                    className="bg-green-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-green-600 disabled:opacity-50 flex items-center"
+                    style={{ ...buttonStyle('#22c55e', '#16a34a'), opacity: processing === project.id ? 0.5 : 1 }}
                   >
-                    <CheckCircle className="w-4 h-4 mr-2" />
+                    <CheckCircle style={{ width: '16px', height: '16px' }} />
                     Одобрить
                   </button>
 
                   <button
                     onClick={() => handleAction('project', project.id, 'start_voting')}
                     disabled={processing === project.id}
-                    className="bg-blue-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-600 disabled:opacity-50 flex items-center"
+                    style={{ ...buttonStyle('#2563eb', '#1d4ed8'), opacity: processing === project.id ? 0.5 : 1 }}
                   >
+                    <Play style={{ width: '16px', height: '16px' }} />
                     Запустить голосование
                   </button>
 
@@ -229,9 +294,9 @@ export default function Moderation() {
                       if (notes) handleAction('project', project.id, 'reject', notes)
                     }}
                     disabled={processing === project.id}
-                    className="bg-red-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-red-600 disabled:opacity-50 flex items-center"
+                    style={{ ...buttonStyle('#ef4444', '#dc2626'), opacity: processing === project.id ? 0.5 : 1 }}
                   >
-                    <XCircle className="w-4 h-4 mr-2" />
+                    <XCircle style={{ width: '16px', height: '16px' }} />
                     Отклонить
                   </button>
                 </div>
@@ -242,60 +307,52 @@ export default function Moderation() {
       )}
 
       {activeTab === 'comments' && (
-        <div className="space-y-4">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
           {comments.length === 0 ? (
-            <div className="bg-white rounded-xl shadow-sm p-12 text-center">
-              <CheckCircle className="w-16 h-16 text-green-400 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">Все комментарии проверены</h3>
-              <p className="text-gray-600">Нет комментариев, ожидающих модерации</p>
+            <div style={{ backgroundColor: 'white', borderRadius: '0.75rem', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', padding: '3rem', textAlign: 'center' }}>
+              <CheckCircle style={{ width: '64px', height: '64px', color: '#86efac', margin: '0 auto 1rem' }} />
+              <h3 style={{ fontSize: '1.25rem', fontWeight: '600', color: '#1e293b', marginBottom: '0.5rem' }}>Все комментарии проверены</h3>
+              <p style={{ color: '#64748b' }}>Нет комментариев, ожидающих модерации</p>
             </div>
           ) : (
             comments.map((comment: any) => (
-              <div key={comment.id} className="bg-white rounded-xl shadow-sm p-6">
-                <div className="flex items-start justify-between mb-4">
+              <div key={comment.id} style={{ backgroundColor: 'white', borderRadius: '0.75rem', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', padding: '1.5rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
                   <div>
                     <Link
-                      href={`/projects/${comment.project.id}`}
-                      className="text-blue-600 hover:text-blue-700 font-medium"
+                      href={`/projects/${comment.project?.id}`}
+                      style={{ color: '#2563eb', fontWeight: '500', textDecoration: 'none' }}
                     >
-                      {comment.project.title}
+                      {comment.project?.title}
                     </Link>
-                    <div className="flex items-center text-sm text-gray-600 mt-1">
-                      <User className="w-4 h-4 mr-1" />
-                      {comment.user.name} ({comment.user.email})
+                    <div style={{ display: 'flex', alignItems: 'center', fontSize: '0.875rem', color: '#64748b', marginTop: '0.25rem' }}>
+                      <User style={{ width: '16px', height: '16px', marginRight: '0.25rem' }} />
+                      {comment.user?.name}
                     </div>
                   </div>
-                  <span className="text-sm text-gray-500">
+                  <span style={{ fontSize: '0.875rem', color: '#94a3b8' }}>
                     {new Date(comment.createdAt).toLocaleDateString('ru-RU')}
                   </span>
                 </div>
 
-                <p className="text-gray-700 mb-4">{comment.content}</p>
+                <p style={{ color: '#475569', marginBottom: '1rem' }}>{comment.content}</p>
 
-                {comment.aiModerationResult && (
-                  <div className="bg-yellow-50 p-3 rounded-lg mb-4">
-                    <p className="text-sm text-yellow-800">
-                      AI-модерация: {comment.aiModerationResult}
-                    </p>
-                  </div>
-                )}
-
-                <div className="flex gap-3">
+                <div style={{ display: 'flex', gap: '0.75rem' }}>
                   <button
                     onClick={() => handleAction('comment', comment.id, 'approve')}
                     disabled={processing === comment.id}
-                    className="bg-green-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-green-600 disabled:opacity-50 flex items-center"
+                    style={{ ...buttonStyle('#22c55e', '#16a34a'), opacity: processing === comment.id ? 0.5 : 1 }}
                   >
-                    <CheckCircle className="w-4 h-4 mr-2" />
+                    <CheckCircle style={{ width: '16px', height: '16px' }} />
                     Одобрить
                   </button>
 
                   <button
                     onClick={() => handleAction('comment', comment.id, 'reject')}
                     disabled={processing === comment.id}
-                    className="bg-red-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-red-600 disabled:opacity-50 flex items-center"
+                    style={{ ...buttonStyle('#ef4444', '#dc2626'), opacity: processing === comment.id ? 0.5 : 1 }}
                   >
-                    <XCircle className="w-4 h-4 mr-2" />
+                    <XCircle style={{ width: '16px', height: '16px' }} />
                     Удалить
                   </button>
                 </div>
@@ -304,6 +361,13 @@ export default function Moderation() {
           )}
         </div>
       )}
+
+      <style jsx global>{`
+        @keyframes spin {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
+        }
+      `}</style>
     </>
   )
 }

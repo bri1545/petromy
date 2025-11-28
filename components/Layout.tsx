@@ -1,7 +1,7 @@
 import { ReactNode } from 'react'
 import { useSession, signOut } from 'next-auth/react'
 import Link from 'next/link'
-import { Home, FileText, Vote, Users, Settings, LogOut, Menu, X, Coins } from 'lucide-react'
+import { Home, FileText, Vote, Users, Settings, LogOut, Menu, X, Coins, LogIn, UserPlus, Building2 } from 'lucide-react'
 import { useState } from 'react'
 
 interface LayoutProps {
@@ -34,26 +34,43 @@ export default function Layout({ children }: LayoutProps) {
   const userTokens = (session?.user as any)?.tokens || 0
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <nav className="bg-gradient-to-r from-blue-700 to-blue-900 shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between h-16">
-            <div className="flex items-center">
-              <Link href="/" className="flex items-center space-x-2">
-                <div className="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
-                  <span className="text-blue-700 font-bold text-xl">МП</span>
+    <div style={{ minHeight: '100vh', backgroundColor: '#f1f5f9' }}>
+      <nav style={{ backgroundColor: '#1e3a8a', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)' }}>
+        <div style={{ maxWidth: '80rem', margin: '0 auto', padding: '0 1rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', height: '64px', alignItems: 'center' }}>
+            <div style={{ display: 'flex', alignItems: 'center' }}>
+              <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', textDecoration: 'none' }}>
+                <div style={{ 
+                  backgroundColor: '#3b82f6', 
+                  padding: '0.5rem', 
+                  borderRadius: '0.5rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}>
+                  <Building2 style={{ width: '24px', height: '24px', color: 'white' }} />
                 </div>
-                <span className="text-white font-bold text-lg hidden sm:block">Мой Петропавловск</span>
+                <span style={{ color: 'white', fontWeight: 'bold', fontSize: '1.125rem' }}>Мой Петропавловск</span>
               </Link>
               
-              <div className="hidden md:flex ml-10 space-x-4">
+              <div style={{ display: 'flex', marginLeft: '2.5rem', gap: '0.5rem' }} className="hidden md:flex">
                 {navigation.map((item) => (
                   <Link
                     key={item.name}
                     href={item.href}
-                    className="text-blue-100 hover:text-white px-3 py-2 rounded-md text-sm font-medium flex items-center space-x-1"
+                    style={{ 
+                      color: '#bfdbfe', 
+                      padding: '0.5rem 0.75rem', 
+                      borderRadius: '0.375rem', 
+                      fontSize: '0.875rem', 
+                      fontWeight: '500',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.25rem',
+                      textDecoration: 'none'
+                    }}
                   >
-                    <item.icon className="w-4 h-4" />
+                    <item.icon style={{ width: '16px', height: '16px' }} />
                     <span>{item.name}</span>
                   </Link>
                 ))}
@@ -62,9 +79,19 @@ export default function Layout({ children }: LayoutProps) {
                   <Link
                     key={item.name}
                     href={item.href}
-                    className="text-blue-100 hover:text-white px-3 py-2 rounded-md text-sm font-medium flex items-center space-x-1"
+                    style={{ 
+                      color: '#bfdbfe', 
+                      padding: '0.5rem 0.75rem', 
+                      borderRadius: '0.375rem', 
+                      fontSize: '0.875rem', 
+                      fontWeight: '500',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.25rem',
+                      textDecoration: 'none'
+                    }}
                   >
-                    <item.icon className="w-4 h-4" />
+                    <item.icon style={{ width: '16px', height: '16px' }} />
                     <span>{item.name}</span>
                   </Link>
                 ))}
@@ -73,9 +100,19 @@ export default function Layout({ children }: LayoutProps) {
                   <Link
                     key={item.name}
                     href={item.href}
-                    className="text-yellow-300 hover:text-yellow-100 px-3 py-2 rounded-md text-sm font-medium flex items-center space-x-1"
+                    style={{ 
+                      color: '#93c5fd', 
+                      padding: '0.5rem 0.75rem', 
+                      borderRadius: '0.375rem', 
+                      fontSize: '0.875rem', 
+                      fontWeight: '500',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.25rem',
+                      textDecoration: 'none'
+                    }}
                   >
-                    <item.icon className="w-4 h-4" />
+                    <item.icon style={{ width: '16px', height: '16px' }} />
                     <span>{item.name}</span>
                   </Link>
                 ))}
@@ -84,33 +121,62 @@ export default function Layout({ children }: LayoutProps) {
                   <Link
                     key={item.name}
                     href={item.href}
-                    className="text-yellow-300 hover:text-yellow-100 px-3 py-2 rounded-md text-sm font-medium flex items-center space-x-1"
+                    style={{ 
+                      color: '#93c5fd', 
+                      padding: '0.5rem 0.75rem', 
+                      borderRadius: '0.375rem', 
+                      fontSize: '0.875rem', 
+                      fontWeight: '500',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.25rem',
+                      textDecoration: 'none'
+                    }}
                   >
-                    <item.icon className="w-4 h-4" />
+                    <item.icon style={{ width: '16px', height: '16px' }} />
                     <span>{item.name}</span>
                   </Link>
                 ))}
               </div>
             </div>
 
-            <div className="hidden md:flex items-center space-x-4">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }} className="hidden md:flex">
               {session ? (
                 <>
-                  <div className="flex items-center space-x-2 bg-blue-800 px-3 py-1.5 rounded-full">
-                    <Coins className="w-4 h-4 text-yellow-400" />
-                    <span className="text-yellow-400 font-semibold">{userTokens}</span>
+                  <div style={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    gap: '0.5rem', 
+                    backgroundColor: '#1e40af', 
+                    padding: '0.375rem 0.75rem', 
+                    borderRadius: '9999px' 
+                  }}>
+                    <Coins style={{ width: '16px', height: '16px', color: '#93c5fd' }} />
+                    <span style={{ color: '#93c5fd', fontWeight: '600' }}>{userTokens}</span>
                   </div>
                   <Link 
                     href="/profile" 
-                    className="text-blue-100 hover:text-white text-sm"
+                    style={{ color: '#bfdbfe', fontSize: '0.875rem', textDecoration: 'none' }}
                   >
                     {session.user?.name}
                   </Link>
                   <button
                     onClick={() => signOut()}
-                    className="bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded-md text-sm font-medium flex items-center space-x-1"
+                    style={{ 
+                      backgroundColor: '#64748b', 
+                      color: 'white', 
+                      padding: '0.375rem 0.75rem', 
+                      borderRadius: '0.375rem', 
+                      fontSize: '0.875rem', 
+                      fontWeight: '500',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.25rem',
+                      border: 'none',
+                      cursor: 'pointer'
+                    }}
                   >
-                    <LogOut className="w-4 h-4" />
+                    <LogOut style={{ width: '16px', height: '16px' }} />
                     <span>Выйти</span>
                   </button>
                 </>
@@ -118,39 +184,72 @@ export default function Layout({ children }: LayoutProps) {
                 <>
                   <Link
                     href="/auth/login"
-                    className="text-blue-100 hover:text-white px-3 py-2 text-sm font-medium"
+                    style={{ 
+                      color: 'white', 
+                      backgroundColor: 'transparent',
+                      padding: '0.625rem 1.25rem', 
+                      borderRadius: '0.5rem', 
+                      fontSize: '0.875rem', 
+                      fontWeight: '600',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
+                      textDecoration: 'none',
+                      border: '2px solid #60a5fa'
+                    }}
                   >
-                    Войти
+                    <LogIn style={{ width: '18px', height: '18px' }} />
+                    <span>Войти</span>
                   </Link>
                   <Link
                     href="/auth/register"
-                    className="bg-white text-blue-700 hover:bg-blue-50 px-4 py-2 rounded-md text-sm font-medium"
+                    style={{ 
+                      backgroundColor: '#3b82f6', 
+                      color: 'white', 
+                      padding: '0.625rem 1.25rem', 
+                      borderRadius: '0.5rem', 
+                      fontSize: '0.875rem', 
+                      fontWeight: '600',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
+                      textDecoration: 'none'
+                    }}
                   >
-                    Регистрация
+                    <UserPlus style={{ width: '18px', height: '18px' }} />
+                    <span>Регистрация</span>
                   </Link>
                 </>
               )}
             </div>
 
-            <div className="md:hidden flex items-center">
+            <div className="md:hidden" style={{ display: 'flex', alignItems: 'center' }}>
               <button
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-                className="text-white p-2"
+                style={{ color: 'white', padding: '0.5rem', background: 'none', border: 'none', cursor: 'pointer' }}
               >
-                {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                {mobileMenuOpen ? <X style={{ width: '24px', height: '24px' }} /> : <Menu style={{ width: '24px', height: '24px' }} />}
               </button>
             </div>
           </div>
         </div>
 
         {mobileMenuOpen && (
-          <div className="md:hidden bg-blue-800">
-            <div className="px-2 pt-2 pb-3 space-y-1">
+          <div className="md:hidden" style={{ backgroundColor: '#1e40af' }}>
+            <div style={{ padding: '0.5rem' }}>
               {navigation.map((item) => (
                 <Link
                   key={item.name}
                   href={item.href}
-                  className="text-blue-100 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                  style={{ 
+                    color: '#bfdbfe', 
+                    display: 'block',
+                    padding: '0.75rem',
+                    borderRadius: '0.375rem',
+                    fontSize: '1rem',
+                    fontWeight: '500',
+                    textDecoration: 'none'
+                  }}
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   {item.name}
@@ -161,7 +260,15 @@ export default function Layout({ children }: LayoutProps) {
                 <Link
                   key={item.name}
                   href={item.href}
-                  className="text-blue-100 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                  style={{ 
+                    color: '#bfdbfe', 
+                    display: 'block',
+                    padding: '0.75rem',
+                    borderRadius: '0.375rem',
+                    fontSize: '1rem',
+                    fontWeight: '500',
+                    textDecoration: 'none'
+                  }}
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   {item.name}
@@ -171,7 +278,19 @@ export default function Layout({ children }: LayoutProps) {
               {session ? (
                 <button
                   onClick={() => { signOut(); setMobileMenuOpen(false); }}
-                  className="text-red-300 hover:text-red-100 block px-3 py-2 rounded-md text-base font-medium w-full text-left"
+                  style={{ 
+                    color: '#94a3b8', 
+                    display: 'block',
+                    padding: '0.75rem',
+                    borderRadius: '0.375rem',
+                    fontSize: '1rem',
+                    fontWeight: '500',
+                    width: '100%',
+                    textAlign: 'left',
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer'
+                  }}
                 >
                   Выйти
                 </button>
@@ -179,17 +298,42 @@ export default function Layout({ children }: LayoutProps) {
                 <>
                   <Link
                     href="/auth/login"
-                    className="text-blue-100 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                    style={{ 
+                      color: 'white',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
+                      padding: '0.75rem',
+                      borderRadius: '0.375rem',
+                      fontSize: '1rem',
+                      fontWeight: '500',
+                      textDecoration: 'none',
+                      marginBottom: '0.5rem',
+                      border: '1px solid #60a5fa'
+                    }}
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    Войти
+                    <LogIn style={{ width: '20px', height: '20px' }} />
+                    <span>Войти</span>
                   </Link>
                   <Link
                     href="/auth/register"
-                    className="text-blue-100 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                    style={{ 
+                      color: 'white',
+                      backgroundColor: '#3b82f6',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
+                      padding: '0.75rem',
+                      borderRadius: '0.375rem',
+                      fontSize: '1rem',
+                      fontWeight: '500',
+                      textDecoration: 'none'
+                    }}
                     onClick={() => setMobileMenuOpen(false)}
                   >
-                    Регистрация
+                    <UserPlus style={{ width: '20px', height: '20px' }} />
+                    <span>Регистрация</span>
                   </Link>
                 </>
               )}
@@ -198,17 +342,15 @@ export default function Layout({ children }: LayoutProps) {
         )}
       </nav>
 
-      <main className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+      <main style={{ maxWidth: '80rem', margin: '0 auto', padding: '1.5rem 1rem' }}>
         {children}
       </main>
 
-      <footer className="bg-gray-800 text-gray-300 py-8 mt-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <p className="text-lg font-semibold text-white mb-2">Мой Петропавловск</p>
-            <p className="text-sm">Платформа гражданских инициатив для развития города</p>
-            <p className="text-xs mt-4 text-gray-500">2024 Все права защищены</p>
-          </div>
+      <footer style={{ backgroundColor: '#334155', color: '#cbd5e1', padding: '2rem 0', marginTop: '3rem' }}>
+        <div style={{ maxWidth: '80rem', margin: '0 auto', padding: '0 1rem', textAlign: 'center' }}>
+          <p style={{ fontSize: '1.125rem', fontWeight: '600', color: 'white', marginBottom: '0.5rem' }}>Мой Петропавловск</p>
+          <p style={{ fontSize: '0.875rem' }}>Платформа гражданских инициатив для развития города</p>
+          <p style={{ fontSize: '0.75rem', marginTop: '1rem', color: '#94a3b8' }}>2024 Все права защищены</p>
         </div>
       </footer>
     </div>
