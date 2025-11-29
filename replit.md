@@ -98,8 +98,19 @@ The app is already configured with:
 - Минимум 3 символа (вместо 20)
 - Автоматическое одобрение при отсутствии GEMINI_API_KEY
 
+### AI-чат по проектам
+- После анализа проекта можно задавать вопросы AI
+- Чат понимает контекст конкретного проекта
+- История разговора сохраняется в рамках сессии
+- Доступен во вкладке "Задать вопрос" в модальном окне AI-анализа
+
 ## Последние изменения
 
+- 29.11.2025: **AI Chat Feature Added**
+  - Added ability to ask questions to AI about specific projects
+  - AI responds with context of the specific project
+  - Chat interface in AI Analysis modal with tabs
+  - Updated Gemini model to gemini-2.0-flash
 - 29.11.2025: **Major Feature Update**
   - Added company subscription system with 4 plan durations
   - AI now estimates project budget automatically
