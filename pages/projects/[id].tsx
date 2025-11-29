@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { 
   ArrowLeft, ThumbsUp, ThumbsDown, MessageCircle, MapPin, Calendar, 
   Coins, Building2, User, Send, AlertCircle, CheckCircle, Loader2,
-  TrendingUp, AlertTriangle, Lightbulb, Target, Brain
+  TrendingUp, AlertTriangle, Lightbulb, Target, Brain, Trash2, Shield, XCircle
 } from 'lucide-react'
 import AIAnalysisModal from '../../components/AIAnalysisModal'
 
@@ -137,6 +137,69 @@ export default function ProjectDetail() {
       setError(err.message)
     } finally {
       setCommenting(false)
+    }
+  }
+
+  const handleDeleteProject = async () => {
+    if (!confirm('Вы уверены, что хотите удалить этот проект? Это действие нельзя отменить.')) {
+      return
+    }
+
+    try {
+      const res = await fetch(`/api/projects/${id}`, {
+        method: 'DELETE'
+      })
+
+      if (!res.ok) {
+        const data = await res.json()
+        throw new Error(data.error)
+      }
+
+      router.push('/projects')
+    } catch (err: any) {
+      setError(err.message)
+    }
+  }
+
+  const handleDeleteComment = async (commentId: string) => {
+    if (!confirm('Удалить этот комментарий?')) {
+      return
+    }
+
+    try {
+      const res = await fetch(`/api/comments/${commentId}`, {
+        method: 'DELETE'
+      })
+
+      if (!res.ok) {
+        const data = await res.json()
+        throw new Error(data.error)
+      }
+
+      setSuccess('Комментарий удален')
+      fetchProject()
+    } catch (err: any) {
+      setError(err.message)
+    }
+  }
+
+  const handleApproveComment = async (commentId: string, isApproved: boolean) => {
+    try {
+      const res = await fetch(`/api/comments/${commentId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ isApproved })
+      })
+
+      if (!res.ok) {
+        const data = await res.json()
+        throw new Error(data.error)
+      }
+
+      setSuccess(isApproved ? 'Комментарий одобрен' : 'Комментарий отклонен')
+      fetchProject()
+    } catch (err: any) {
+      setError(err.message)
     }
   }
 
@@ -402,12 +465,50 @@ export default function ProjectDetail() {
             {project.comments?.length > 0 ? (
               <div className="space-y-4">
                 {project.comments.map((c: any) => (
-                  <div key={c.id} className="p-4 bg-gray-50 rounded-lg">
+                  <div key={c.id} className={`p-4 rounded-lg ${c.isApproved ? 'bg-gray-50' : 'bg-yellow-50 border border-yellow-200'}`}>
                     <div className="flex items-center justify-between mb-2">
-                      <span className="font-medium text-gray-900">{c.user.name}</span>
-                      <span className="text-sm text-gray-500">
-                        {new Date(c.createdAt).toLocaleDateString('ru-RU')}
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium text-gray-900">{c.user.name}</span>
+                        {!c.isApproved && project.isAdmin && (
+                          <span className="px-2 py-0.5 text-xs bg-yellow-100 text-yellow-800 rounded-full">
+                            На модерации
+                          </span>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm text-gray-500">
+                          {new Date(c.createdAt).toLocaleDateString('ru-RU')}
+                        </span>
+                        {project.isAdmin && (
+                          <div className="flex items-center gap-1">
+                            {!c.isApproved && (
+                              <button
+                                onClick={() => handleApproveComment(c.id, true)}
+                                className="p-1 text-green-600 hover:bg-green-100 rounded"
+                                title="Одобрить"
+                              >
+                                <CheckCircle className="w-4 h-4" />
+                              </button>
+                            )}
+                            {c.isApproved && (
+                              <button
+                                onClick={() => handleApproveComment(c.id, false)}
+                                className="p-1 text-orange-600 hover:bg-orange-100 rounded"
+                                title="Отклонить"
+                              >
+                                <XCircle className="w-4 h-4" />
+                              </button>
+                            )}
+                            <button
+                              onClick={() => handleDeleteComment(c.id)}
+                              className="p-1 text-red-600 hover:bg-red-100 rounded"
+                              title="Удалить"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </div>
+                        )}
+                      </div>
                     </div>
                     <p className="text-gray-700">{c.content}</p>
                   </div>
@@ -564,6 +665,25 @@ export default function ProjectDetail() {
               Открыть AI-анализ
             </button>
           </div>
+
+          {project.isAdmin && (
+            <div className="bg-red-50 border border-red-200 rounded-2xl shadow-lg p-6">
+              <h3 className="text-lg font-bold text-red-900 mb-4 flex items-center">
+                <Shield className="w-5 h-5 mr-2" />
+                Управление (Админ)
+              </h3>
+              <p className="text-red-700 text-sm mb-4">
+                Удаление проекта невозможно отменить. Будут удалены все связанные данные: голоса, комментарии и взносы.
+              </p>
+              <button
+                onClick={handleDeleteProject}
+                className="w-full bg-red-600 text-white py-3 rounded-lg font-semibold hover:bg-red-700 flex items-center justify-center"
+              >
+                <Trash2 className="w-5 h-5 mr-2" />
+                Удалить проект
+              </button>
+            </div>
+          )}
         </div>
       </div>
 

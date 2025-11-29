@@ -8,6 +8,9 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const { id } = req.query
+  const session = await getServerSession(req, res, authOptions)
+  const userRole = (session?.user as any)?.role
+  const isAdmin = ['MODERATOR', 'ADMIN'].includes(userRole)
 
   if (req.method === 'GET') {
     const project = await prisma.project.findUnique({
@@ -27,7 +30,7 @@ export default async function handler(
           }
         },
         comments: {
-          where: { isApproved: true },
+          where: isAdmin ? {} : { isApproved: true },
           include: {
             user: {
               select: { id: true, name: true }
@@ -51,12 +54,10 @@ export default async function handler(
       return res.status(404).json({ error: 'Проект не найден' })
     }
 
-    return res.status(200).json(project)
+    return res.status(200).json({ ...project, isAdmin })
   }
 
   if (req.method === 'PATCH') {
-    const session = await getServerSession(req, res, authOptions)
-    
     if (!session) {
       return res.status(401).json({ error: 'Необходима авторизация' })
     }
@@ -69,7 +70,6 @@ export default async function handler(
       return res.status(404).json({ error: 'Проект не найден' })
     }
 
-    const userRole = (session.user as any).role
     const userId = (session.user as any).id
 
     if (project.authorId !== userId && !['MODERATOR', 'ADMIN', 'CURATOR'].includes(userRole)) {
@@ -82,6 +82,26 @@ export default async function handler(
     })
 
     return res.status(200).json(updatedProject)
+  }
+
+  if (req.method === 'DELETE') {
+    if (!session) {
+      return res.status(401).json({ error: 'Необходима авторизация' })
+    }
+
+    if (!isAdmin) {
+      return res.status(403).json({ error: 'Только администратор может удалять проекты' })
+    }
+
+    await prisma.vote.deleteMany({ where: { projectId: id as string } })
+    await prisma.comment.deleteMany({ where: { projectId: id as string } })
+    await prisma.contribution.deleteMany({ where: { projectId: id as string } })
+    
+    await prisma.project.delete({
+      where: { id: id as string }
+    })
+
+    return res.status(200).json({ message: 'Проект удален' })
   }
 
   return res.status(405).json({ error: 'Method not allowed' })

@@ -104,8 +104,21 @@ The app is already configured with:
 - История разговора сохраняется в рамках сессии
 - Доступен во вкладке "Задать вопрос" в модальном окне AI-анализа
 
+### Административные функции
+- Роли MODERATOR и ADMIN могут:
+  - Удалять проекты (с каскадным удалением голосов, комментариев, вкладов)
+  - Одобрять/отклонять комментарии
+  - Удалять комментарии
+- Админы видят все комментарии (включая неодобренные)
+- Учётная запись модератора: admin@email.com / admin123
+
 ## Последние изменения
 
+- 29.11.2025: **Admin Controls Added**
+  - Added project deletion for admins (cascade deletes votes, comments, contributions)
+  - Added comment moderation: approve/reject/delete
+  - Admins see all comments including unapproved ones
+  - Admin UI controls on project detail page
 - 29.11.2025: **AI Chat Feature Added**
   - Added ability to ask questions to AI about specific projects
   - AI responds with context of the specific project
@@ -118,10 +131,11 @@ The app is already configured with:
   - Added image upload for projects
   - Reduced minimum character limits for projects and comments
   - Companies require subscription for project submission and voting
-- 29.11.2025: **GitHub Import Completed** - Configured for Replit environment
-  - Installed all npm dependencies (Next.js 15.5.6, React 19, Prisma, etc.)
+- 29.11.2025: **Fresh GitHub Clone Import Completed** - Re-configured for Replit environment
+  - Installed all npm dependencies (Next.js 15.5.6, React 19, Prisma 5.22.0, etc.)
   - Set up environment variables (DATABASE_URL, NEXTAUTH_URL, NEXTAUTH_SECRET)
-  - Configured Next.js Dev Server workflow on port 5000 with webview
+  - Configured Next.js Dev Server workflow on port 5000 with webview output
   - Generated Prisma client and verified database schema
   - Configured autoscale deployment with build and start commands
+  - Verified app is running correctly with existing SQLite database
 - Previous history: Security improvements, AI analysis features, design enhancements
