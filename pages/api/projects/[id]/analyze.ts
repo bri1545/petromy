@@ -41,7 +41,6 @@ export default async function handler(
     title: project.title,
     description: project.description,
     category: project.category,
-    estimatedBudget: project.estimatedBudget,
     location: project.location,
     benefits: project.benefits,
     isCompanyProject: project.isCompanyProject
@@ -58,7 +57,8 @@ export default async function handler(
       aiPros: JSON.stringify(analysis.pros),
       aiCons: JSON.stringify(analysis.cons),
       aiRisks: JSON.stringify(analysis.risks),
-      aiInvestmentAdvantages: JSON.stringify(analysis.investmentAdvantages)
+      aiInvestmentAdvantages: JSON.stringify(analysis.investmentAdvantages),
+      aiEstimatedBudget: analysis.estimatedBudget ? Number(analysis.estimatedBudget) : null
     }
   })
 

@@ -34,6 +34,16 @@ export default async function handler(
     return res.status(404).json({ error: 'Пользователь не найден' })
   }
 
+  if (user.role === 'COMPANY') {
+    const now = new Date()
+    if (!user.subscriptionEnd || new Date(user.subscriptionEnd) < now) {
+      return res.status(403).json({ 
+        error: 'Для голосования компаниям требуется активная подписка',
+        needsSubscription: true 
+      })
+    }
+  }
+
   if (user.tokens < 1) {
     return res.status(400).json({ error: 'Недостаточно токенов для голосования. У вас ' + user.tokens + ' токенов.' })
   }

@@ -5,8 +5,8 @@ import { prisma } from '../../../lib/prisma'
 import { z } from 'zod'
 
 const projectSchema = z.object({
-  title: z.string().min(10, 'Название должно быть минимум 10 символов'),
-  description: z.string().min(100, 'Описание должно быть минимум 100 символов'),
+  title: z.string().min(5, 'Название должно быть минимум 5 символов'),
+  description: z.string().min(10, 'Описание должно быть минимум 10 символов'),
   category: z.enum([
     'INFRASTRUCTURE',
     'BEAUTIFICATION', 
@@ -19,11 +19,13 @@ const projectSchema = z.object({
     'HEALTHCARE',
     'OTHER'
   ]),
-  estimatedBudget: z.number().optional(),
   location: z.string().optional(),
+  latitude: z.number().optional(),
+  longitude: z.number().optional(),
   timeline: z.string().optional(),
   benefits: z.string().optional(),
-  targetAudience: z.string().optional()
+  targetAudience: z.string().optional(),
+  imageUrl: z.string().optional()
 })
 
 export default async function handler(
@@ -88,9 +90,28 @@ export default async function handler(
         return res.status(404).json({ error: 'Пользователь не найден' })
       }
 
+      if (user.role === 'COMPANY') {
+        const now = new Date()
+        if (!user.subscriptionEnd || new Date(user.subscriptionEnd) < now) {
+          return res.status(403).json({ 
+            error: 'Для подачи проектов компаниям требуется активная подписка',
+            needsSubscription: true 
+          })
+        }
+      }
+
       const project = await prisma.project.create({
         data: {
-          ...data,
+          title: data.title,
+          description: data.description,
+          category: data.category,
+          location: data.location,
+          latitude: data.latitude,
+          longitude: data.longitude,
+          timeline: data.timeline,
+          benefits: data.benefits,
+          targetAudience: data.targetAudience,
+          imageUrl: data.imageUrl,
           authorId: user.id,
           isCompanyProject: user.role === 'COMPANY',
           status: 'PENDING_MODERATION'

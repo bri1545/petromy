@@ -1,8 +1,12 @@
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/router'
 import Head from 'next/head'
 import Link from 'next/link'
-import { Filter, Search, Plus, Loader2 } from 'lucide-react'
+import dynamic from 'next/dynamic'
+import { Filter, Search, Plus, Loader2, Map, List } from 'lucide-react'
 import ProjectCard from '../../components/ProjectCard'
+
+const ProjectMap = dynamic(() => import('../../components/ProjectMap'), { ssr: false })
 
 const categories = [
   { value: '', label: 'Все категории' },
@@ -28,6 +32,7 @@ const statuses = [
 ]
 
 export default function Projects() {
+  const router = useRouter()
   const [projects, setProjects] = useState([])
   const [loading, setLoading] = useState(true)
   const [category, setCategory] = useState('')
@@ -35,6 +40,7 @@ export default function Projects() {
   const [search, setSearch] = useState('')
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
+  const [viewMode, setViewMode] = useState<'list' | 'map'>('list')
 
   useEffect(() => {
     fetchProjects()
@@ -118,6 +124,20 @@ export default function Projects() {
                 <option key={s.value} value={s.value}>{s.label}</option>
               ))}
             </select>
+            <div className="flex border border-gray-300 rounded-lg overflow-hidden">
+              <button
+                onClick={() => setViewMode('list')}
+                className={`px-3 py-2.5 ${viewMode === 'list' ? 'bg-blue-600 text-white' : 'bg-white text-gray-600 hover:bg-gray-50'}`}
+              >
+                <List className="w-5 h-5" />
+              </button>
+              <button
+                onClick={() => setViewMode('map')}
+                className={`px-3 py-2.5 ${viewMode === 'map' ? 'bg-blue-600 text-white' : 'bg-white text-gray-600 hover:bg-gray-50'}`}
+              >
+                <Map className="w-5 h-5" />
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -133,6 +153,16 @@ export default function Projects() {
           </div>
           <h3 className="text-xl font-semibold text-gray-900 mb-2">Проекты не найдены</h3>
           <p className="text-gray-600">Попробуйте изменить фильтры или создайте свой проект</p>
+        </div>
+      ) : viewMode === 'map' ? (
+        <div className="mb-6">
+          <ProjectMap 
+            projects={filteredProjects} 
+            onProjectClick={(id) => router.push(`/projects/${id}`)}
+          />
+          <p className="text-sm text-gray-500 mt-2 text-center">
+            Нажмите на маркер, чтобы увидеть подробности проекта
+          </p>
         </div>
       ) : (
         <>

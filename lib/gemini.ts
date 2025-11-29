@@ -6,7 +6,6 @@ export async function analyzeProject(project: {
   title: string
   description: string
   category: string
-  estimatedBudget?: number | null
   location?: string | null
   benefits?: string | null
   isCompanyProject: boolean
@@ -23,7 +22,6 @@ export async function analyzeProject(project: {
 Название: ${project.title}
 Описание: ${project.description}
 Категория: ${project.category}
-${project.estimatedBudget ? `Примерный бюджет: ${project.estimatedBudget} тенге` : ''}
 ${project.location ? `Местоположение: ${project.location}` : ''}
 ${project.benefits ? `Преимущества по мнению автора: ${project.benefits}` : ''}
 Тип проекта: ${project.isCompanyProject ? 'Коммерческий (от компании)' : 'Гражданская инициатива'}
@@ -35,9 +33,12 @@ ${project.benefits ? `Преимущества по мнению автора: $
   "cons": ["минус 1", "минус 2"],
   "risks": ["риск 1", "риск 2"],
   "investmentAdvantages": ["преимущество для инвесторов 1", "преимущество 2"],
+  "estimatedBudget": 5000000,
   "feasibilityScore": 7,
   "recommendation": "Рекомендация для модераторов"
 }
+
+ВАЖНО: Поле "estimatedBudget" должно содержать примерную оценку бюджета проекта в тенге (число без валюты). Основывайся на типе проекта, масштабе работ и средних ценах в Казахстане.
 
 Отвечай ТОЛЬКО валидным JSON без дополнительного текста.`
 

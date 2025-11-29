@@ -6,7 +6,7 @@ import { moderateComment } from '../../../../lib/gemini'
 import { z } from 'zod'
 
 const commentSchema = z.object({
-  content: z.string().min(20, 'Комментарий должен быть минимум 20 символов').max(1000, 'Комментарий не должен превышать 1000 символов')
+  content: z.string().min(3, 'Комментарий должен быть минимум 3 символа').max(1000, 'Комментарий не должен превышать 1000 символов')
 })
 
 export default async function handler(
@@ -37,7 +37,7 @@ export default async function handler(
       return res.status(404).json({ error: 'Проект не найден' })
     }
 
-    let isApproved = false
+    let isApproved = true
     let aiModerationResult = null
 
     if (process.env.GEMINI_API_KEY) {
