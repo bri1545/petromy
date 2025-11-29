@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import Head from 'next/head'
 import Link from 'next/link'
 import dynamic from 'next/dynamic'
-import { Filter, Search, Plus, Loader2, Map, List } from 'lucide-react'
+import { Filter, Search, Plus, Loader2, Map, List, TrendingUp, Clock } from 'lucide-react'
 import ProjectCard from '../../components/ProjectCard'
 
 const ProjectMap = dynamic(() => import('../../components/ProjectMap'), { ssr: false })
@@ -41,10 +41,11 @@ export default function Projects() {
   const [page, setPage] = useState(1)
   const [totalPages, setTotalPages] = useState(1)
   const [viewMode, setViewMode] = useState<'list' | 'map'>('list')
+  const [sortBy, setSortBy] = useState<'votes' | 'date'>('votes')
 
   useEffect(() => {
     fetchProjects()
-  }, [category, status, page])
+  }, [category, status, page, sortBy])
 
   const fetchProjects = async () => {
     setLoading(true)
@@ -54,6 +55,7 @@ export default function Projects() {
       if (status) params.append('status', status)
       params.append('page', page.toString())
       params.append('limit', '9')
+      params.append('sortBy', sortBy)
 
       const res = await fetch(`/api/projects?${params}`)
       const data = await res.json()
@@ -124,6 +126,24 @@ export default function Projects() {
                 <option key={s.value} value={s.value}>{s.label}</option>
               ))}
             </select>
+            <div className="flex border border-gray-300 rounded-lg overflow-hidden">
+              <button
+                onClick={() => { setSortBy('votes'); setPage(1); }}
+                className={`px-3 py-2.5 flex items-center gap-1 ${sortBy === 'votes' ? 'bg-blue-600 text-white' : 'bg-white text-gray-600 hover:bg-gray-50'}`}
+                title="По популярности"
+              >
+                <TrendingUp className="w-4 h-4" />
+                <span className="text-sm hidden sm:inline">Популярные</span>
+              </button>
+              <button
+                onClick={() => { setSortBy('date'); setPage(1); }}
+                className={`px-3 py-2.5 flex items-center gap-1 ${sortBy === 'date' ? 'bg-blue-600 text-white' : 'bg-white text-gray-600 hover:bg-gray-50'}`}
+                title="По дате"
+              >
+                <Clock className="w-4 h-4" />
+                <span className="text-sm hidden sm:inline">Новые</span>
+              </button>
+            </div>
             <div className="flex border border-gray-300 rounded-lg overflow-hidden">
               <button
                 onClick={() => setViewMode('list')}

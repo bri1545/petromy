@@ -2,15 +2,31 @@ import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
-import { User, Mail, Phone, Building2, Coins, FileText, Vote, MessageCircle, Loader2, Save, CheckCircle } from 'lucide-react'
+import Link from 'next/link'
+import { User, Mail, Phone, Building2, Coins, FileText, Vote, MessageCircle, Loader2, Save, CheckCircle, Trash2, Eye, Clock, AlertCircle, ThumbsUp } from 'lucide-react'
+
+interface Project {
+  id: string
+  title: string
+  status: string
+  votesFor: number
+  votesAgainst: number
+  createdAt: string
+  _count: {
+    votes: number
+    comments: number
+  }
+}
 
 export default function Profile() {
   const { data: session, status: authStatus } = useSession()
   const router = useRouter()
   const [profile, setProfile] = useState<any>(null)
+  const [projects, setProjects] = useState<Project[]>([])
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [success, setSuccess] = useState(false)
+  const [deleting, setDeleting] = useState<string | null>(null)
   const [formData, setFormData] = useState({
     name: '',
     phone: ''
@@ -19,6 +35,7 @@ export default function Profile() {
   useEffect(() => {
     if (authStatus === 'authenticated') {
       fetchProfile()
+      fetchProjects()
     }
   }, [authStatus])
 
@@ -36,6 +53,63 @@ export default function Profile() {
     } finally {
       setLoading(false)
     }
+  }
+
+  const fetchProjects = async () => {
+    try {
+      const res = await fetch('/api/user/projects')
+      const data = await res.json()
+      setProjects(data)
+    } catch (error) {
+      console.error('Error fetching projects:', error)
+    }
+  }
+
+  const handleDeleteProject = async (projectId: string) => {
+    if (!confirm('Вы уверены, что хотите удалить этот проект? Это действие нельзя отменить.')) return
+
+    setDeleting(projectId)
+    try {
+      const res = await fetch('/api/user/projects', {
+        method: 'DELETE',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ projectId })
+      })
+
+      const data = await res.json()
+
+      if (!res.ok) {
+        alert(data.error || 'Ошибка при удалении проекта')
+        return
+      }
+
+      fetchProjects()
+      fetchProfile()
+    } catch (error) {
+      console.error('Error deleting project:', error)
+      alert('Ошибка при удалении проекта')
+    } finally {
+      setDeleting(null)
+    }
+  }
+
+  const getStatusBadge = (status: string) => {
+    const statusMap: Record<string, { label: string, color: string, icon: any }> = {
+      'DRAFT': { label: 'Черновик', color: 'bg-gray-100 text-gray-700', icon: FileText },
+      'PENDING_MODERATION': { label: 'На модерации', color: 'bg-yellow-100 text-yellow-700', icon: Clock },
+      'REJECTED': { label: 'Отклонён', color: 'bg-red-100 text-red-700', icon: AlertCircle },
+      'APPROVED': { label: 'Одобрен', color: 'bg-green-100 text-green-700', icon: CheckCircle },
+      'VOTING': { label: 'Голосование', color: 'bg-blue-100 text-blue-700', icon: Vote },
+      'FUNDRAISING': { label: 'Сбор средств', color: 'bg-purple-100 text-purple-700', icon: Coins },
+      'IN_PROGRESS': { label: 'В работе', color: 'bg-indigo-100 text-indigo-700', icon: Clock },
+      'COMPLETED': { label: 'Завершён', color: 'bg-green-100 text-green-700', icon: CheckCircle }
+    }
+    return statusMap[status] || { label: status, color: 'bg-gray-100 text-gray-700', icon: FileText }
+  }
+
+  const canDelete = (status: string) => {
+    const allowedStatuses = ['DRAFT', 'PENDING_MODERATION', 'REJECTED', 'COMPLETED']
+    return allowedStatuses.includes(status)
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -234,6 +308,98 @@ export default function Profile() {
                 )}
               </button>
             </form>
+          </div>
+
+          <div className="bg-white rounded-2xl shadow-lg p-8">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-xl font-bold text-gray-900">Мои проекты</h3>
+              <Link
+                href="/projects/new"
+                className="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-blue-700 text-sm"
+              >
+                Подать проект
+              </Link>
+            </div>
+
+            {projects.length === 0 ? (
+              <div className="text-center py-8 text-gray-500">
+                <FileText className="w-12 h-12 mx-auto mb-4 text-gray-300" />
+                <p>У вас пока нет проектов</p>
+                <p className="text-sm mt-2">Подайте свой первый проект для развития города</p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {projects.map((project) => {
+                  const status = getStatusBadge(project.status)
+                  const StatusIcon = status.icon
+                  return (
+                    <div
+                      key={project.id}
+                      className="border border-gray-200 rounded-xl p-4 hover:border-blue-300 transition-colors"
+                    >
+                      <div className="flex items-start justify-between">
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 mb-2">
+                            <Link
+                              href={`/projects/${project.id}`}
+                              className="font-semibold text-gray-900 hover:text-blue-600"
+                            >
+                              {project.title}
+                            </Link>
+                            <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium ${status.color}`}>
+                              <StatusIcon className="w-3 h-3" />
+                              {status.label}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-4 text-sm text-gray-500">
+                            <span className="flex items-center gap-1">
+                              <ThumbsUp className="w-4 h-4" />
+                              {project.votesFor} за / {project.votesAgainst} против
+                            </span>
+                            <span className="flex items-center gap-1">
+                              <MessageCircle className="w-4 h-4" />
+                              {project._count.comments} комментариев
+                            </span>
+                            <span>
+                              {new Date(project.createdAt).toLocaleDateString('ru-RU')}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2 ml-4">
+                          <Link
+                            href={`/projects/${project.id}`}
+                            className="p-2 text-gray-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg"
+                            title="Просмотр"
+                          >
+                            <Eye className="w-5 h-5" />
+                          </Link>
+                          {canDelete(project.status) && (
+                            <button
+                              onClick={() => handleDeleteProject(project.id)}
+                              disabled={deleting === project.id}
+                              className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg disabled:opacity-50"
+                              title="Удалить проект"
+                            >
+                              {deleting === project.id ? (
+                                <Loader2 className="w-5 h-5 animate-spin" />
+                              ) : (
+                                <Trash2 className="w-5 h-5" />
+                              )}
+                            </button>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  )
+                })}
+              </div>
+            )}
+
+            {projects.length > 0 && (
+              <p className="text-xs text-gray-500 mt-4">
+                * Удалить можно только черновики, проекты на модерации, отклонённые или завершённые проекты
+              </p>
+            )}
           </div>
 
           <div className="bg-gray-50 rounded-xl p-6 text-center text-sm text-gray-600">

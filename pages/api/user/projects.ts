@@ -7,10 +7,6 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  if (req.method !== 'GET') {
-    return res.status(405).json({ error: 'Method not allowed' })
-  }
-
   const session = await getServerSession(req, res, authOptions)
   
   if (!session) {
@@ -19,15 +15,55 @@ export default async function handler(
 
   const userId = (session.user as any).id
 
-  const projects = await prisma.project.findMany({
-    where: { authorId: userId },
-    include: {
-      _count: {
-        select: { votes: true, comments: true, contributions: true }
-      }
-    },
-    orderBy: { createdAt: 'desc' }
-  })
+  if (req.method === 'GET') {
+    const projects = await prisma.project.findMany({
+      where: { authorId: userId },
+      include: {
+        _count: {
+          select: { votes: true, comments: true, contributions: true }
+        }
+      },
+      orderBy: { createdAt: 'desc' }
+    })
 
-  return res.status(200).json(projects)
+    return res.status(200).json(projects)
+  }
+
+  if (req.method === 'DELETE') {
+    const { projectId } = req.body
+
+    if (!projectId) {
+      return res.status(400).json({ error: 'ID проекта обязателен' })
+    }
+
+    const project = await prisma.project.findUnique({
+      where: { id: projectId }
+    })
+
+    if (!project) {
+      return res.status(404).json({ error: 'Проект не найден' })
+    }
+
+    if (project.authorId !== userId) {
+      return res.status(403).json({ error: 'Вы не можете удалить чужой проект' })
+    }
+
+    const allowedStatuses = ['DRAFT', 'PENDING_MODERATION', 'REJECTED', 'COMPLETED']
+    if (!allowedStatuses.includes(project.status)) {
+      return res.status(400).json({ 
+        error: 'Нельзя удалить активный проект. Можно удалить только черновики, проекты на модерации, отклонённые или завершённые.' 
+      })
+    }
+
+    await prisma.$transaction([
+      prisma.vote.deleteMany({ where: { projectId } }),
+      prisma.comment.deleteMany({ where: { projectId } }),
+      prisma.contribution.deleteMany({ where: { projectId } }),
+      prisma.project.delete({ where: { id: projectId } })
+    ])
+
+    return res.status(200).json({ success: true })
+  }
+
+  return res.status(405).json({ error: 'Method not allowed' })
 }

@@ -3,6 +3,7 @@ import { useSession, signOut } from 'next-auth/react'
 import Link from 'next/link'
 import { Home, FileText, Vote, Users, Settings, LogOut, Menu, X, Coins, LogIn, UserPlus, Building2 } from 'lucide-react'
 import { useState } from 'react'
+import AnnouncementBanner from './AnnouncementBanner'
 
 interface LayoutProps {
   children: ReactNode
@@ -341,6 +342,8 @@ export default function Layout({ children }: LayoutProps) {
           </div>
         )}
       </nav>
+
+      <AnnouncementBanner />
 
       <main style={{ maxWidth: '80rem', margin: '0 auto', padding: '1.5rem 1rem' }}>
         {children}

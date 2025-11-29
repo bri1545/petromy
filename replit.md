@@ -112,30 +112,48 @@ The app is already configured with:
 - Админы видят все комментарии (включая неодобренные)
 - Учётная запись модератора: admin@email.com / admin123
 
+### Управление периодами (подача/голосование)
+- Администратор может создавать периоды подачи проектов и голосования
+- Периоды имеют даты начала и окончания
+- Возможность досрочно завершить период
+- Баннер объявлений показывает активный период на всех страницах
+- Проекты можно подавать только в период подачи
+- Голосовать можно только в период голосования
+
+### Сортировка проектов
+- Проекты сортируются по популярности (количество голосов "за")
+- Альтернативная сортировка по дате создания
+- Переключатель сортировки на странице проектов
+
+### Мои проекты
+- В профиле пользователя отображается раздел "Мои проекты"
+- Возможность удаления черновиков, проектов на модерации, отклонённых или завершённых
+- Активные проекты (одобренные, на голосовании, на сборе средств, в работе) удалить нельзя
+
 ## Последние изменения
 
-- 29.11.2025: **Admin Controls Added**
-  - Added project deletion for admins (cascade deletes votes, comments, contributions)
-  - Added comment moderation: approve/reject/delete
-  - Admins see all comments including unapproved ones
-  - Admin UI controls on project detail page
-- 29.11.2025: **AI Chat Feature Added**
-  - Added ability to ask questions to AI about specific projects
-  - AI responds with context of the specific project
-  - Chat interface in AI Analysis modal with tabs
-  - Updated Gemini model to gemini-2.0-flash
-- 29.11.2025: **Major Feature Update**
-  - Added company subscription system with 4 plan durations
-  - AI now estimates project budget automatically
-  - Added Leaflet map with project markers
-  - Added image upload for projects
-  - Reduced minimum character limits for projects and comments
-  - Companies require subscription for project submission and voting
-- 29.11.2025: **Fresh GitHub Clone Import Completed** - Re-configured for Replit environment
+- 29.11.2025: **Period Management & Project Features**
+  - Added Period model for submission/voting periods
+  - API endpoints for period management (create, update, end early)
+  - Announcement banner showing active period on all pages
+  - Project sorting by votes (popularity) and by date
+  - "My Projects" section in user profile with delete functionality
+  - Delete restrictions: only DRAFT, PENDING_MODERATION, REJECTED, COMPLETED can be deleted
+
+- 29.11.2025: **GitHub Import Setup Completed**
+  - Fresh clone imported and configured for Replit environment
   - Installed all npm dependencies (Next.js 15.5.6, React 19, Prisma 5.22.0, etc.)
   - Set up environment variables (DATABASE_URL, NEXTAUTH_URL, NEXTAUTH_SECRET)
   - Configured Next.js Dev Server workflow on port 5000 with webview output
-  - Generated Prisma client and verified database schema
+  - Generated Prisma client and verified database connectivity
   - Configured autoscale deployment with build and start commands
-  - Verified app is running correctly with existing SQLite database
-- Previous history: Security improvements, AI analysis features, design enhancements
+  - Created .gitignore for proper file exclusion
+  - Verified app is running correctly with existing SQLite database and all features
+
+- Previous features include:
+  - Admin controls for project/comment moderation
+  - AI chat for project questions
+  - Company subscription system
+  - AI budget estimation
+  - Leaflet map with project markers
+  - Image upload for projects

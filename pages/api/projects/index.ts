@@ -47,6 +47,12 @@ export default async function handler(
       where.category = category
     }
 
+    const { sortBy = 'votes' } = req.query
+
+    const orderBy: any = sortBy === 'date' 
+      ? { createdAt: 'desc' }
+      : [{ votesFor: 'desc' }, { createdAt: 'desc' }]
+
     const projects = await prisma.project.findMany({
       where,
       include: {
@@ -57,7 +63,7 @@ export default async function handler(
           select: { votes: true, comments: true }
         }
       },
-      orderBy: { createdAt: 'desc' },
+      orderBy,
       skip: (parseInt(page as string) - 1) * parseInt(limit as string),
       take: parseInt(limit as string)
     })
@@ -98,6 +104,24 @@ export default async function handler(
             needsSubscription: true 
           })
         }
+      }
+
+      const now = new Date()
+      const activeSubmissionPeriod = await prisma.period.findFirst({
+        where: {
+          type: 'SUBMISSION',
+          isActive: true,
+          endedEarly: false,
+          startDate: { lte: now },
+          endDate: { gte: now }
+        }
+      })
+
+      if (!activeSubmissionPeriod) {
+        return res.status(400).json({ 
+          error: 'Сейчас не период подачи проектов. Дождитесь начала приёма заявок.',
+          noSubmissionPeriod: true
+        })
       }
 
       const project = await prisma.project.create({

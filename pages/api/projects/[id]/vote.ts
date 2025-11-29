@@ -60,6 +60,21 @@ export default async function handler(
     return res.status(400).json({ error: 'Голосование за этот проект не открыто' })
   }
 
+  const now = new Date()
+  const activeVotingPeriod = await prisma.period.findFirst({
+    where: {
+      type: 'VOTING',
+      isActive: true,
+      endedEarly: false,
+      startDate: { lte: now },
+      endDate: { gte: now }
+    }
+  })
+
+  if (!activeVotingPeriod) {
+    return res.status(400).json({ error: 'Сейчас не период голосования. Дождитесь начала голосования.' })
+  }
+
   const existingVote = await prisma.vote.findUnique({
     where: {
       userId_projectId: {
