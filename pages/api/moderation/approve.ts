@@ -96,6 +96,16 @@ export default async function handler(
         where: { id },
         data: { status: 'VOTING' }
       })
+    } else if (action === 'close') {
+      await prisma.project.update({
+        where: { id },
+        data: {
+          status: 'CANCELLED',
+          moderationNotes: notes || 'Проект закрыт модератором',
+          moderatedAt: new Date(),
+          moderatedBy: (session.user as any).id
+        }
+      })
     } else if (action === 'analyze') {
       const project = await prisma.project.findUnique({
         where: { id }

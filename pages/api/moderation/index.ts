@@ -35,6 +35,24 @@ export default async function handler(
       return res.status(200).json(projects)
     }
 
+    if (type === 'all_projects') {
+      const projects = await prisma.project.findMany({
+        where: { 
+          status: { 
+            in: ['APPROVED', 'VOTING', 'FUNDRAISING', 'IN_PROGRESS'] 
+          } 
+        },
+        include: {
+          author: {
+            select: { id: true, name: true, email: true, companyName: true, role: true }
+          }
+        },
+        orderBy: { createdAt: 'desc' }
+      })
+
+      return res.status(200).json(projects)
+    }
+
     if (type === 'comments') {
       const comments = await prisma.comment.findMany({
         where: { isApproved: false },

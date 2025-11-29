@@ -6,8 +6,9 @@ import Link from 'next/link'
 import { 
   ArrowLeft, ThumbsUp, ThumbsDown, MessageCircle, MapPin, Calendar, 
   Coins, Building2, User, Send, AlertCircle, CheckCircle, Loader2,
-  TrendingUp, AlertTriangle, Lightbulb, Target
+  TrendingUp, AlertTriangle, Lightbulb, Target, Brain
 } from 'lucide-react'
+import AIAnalysisModal from '../../components/AIAnalysisModal'
 
 const statusLabels: Record<string, { label: string; color: string }> = {
   DRAFT: { label: 'Черновик', color: 'bg-gray-100 text-gray-800' },
@@ -47,6 +48,7 @@ export default function ProjectDetail() {
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
   const [userVote, setUserVote] = useState<boolean | null>(null)
+  const [showAIModal, setShowAIModal] = useState(false)
 
   useEffect(() => {
     if (id) {
@@ -162,10 +164,19 @@ export default function ProjectDetail() {
   const totalVotes = project.votesFor + project.votesAgainst
   const approvalPercent = totalVotes > 0 ? Math.round((project.votesFor / totalVotes) * 100) : 0
 
-  const aiPros = project.aiPros ? JSON.parse(project.aiPros) : []
-  const aiCons = project.aiCons ? JSON.parse(project.aiCons) : []
-  const aiRisks = project.aiRisks ? JSON.parse(project.aiRisks) : []
-  const aiAdvantages = project.aiInvestmentAdvantages ? JSON.parse(project.aiInvestmentAdvantages) : []
+  const parseJsonSafe = (jsonString: string | null): string[] => {
+    if (!jsonString) return []
+    try {
+      return JSON.parse(jsonString)
+    } catch {
+      return []
+    }
+  }
+  
+  const aiPros = parseJsonSafe(project.aiPros)
+  const aiCons = parseJsonSafe(project.aiCons)
+  const aiRisks = parseJsonSafe(project.aiRisks)
+  const aiAdvantages = parseJsonSafe(project.aiInvestmentAdvantages)
 
   return (
     <>
@@ -526,8 +537,39 @@ export default function ProjectDetail() {
               </div>
             </div>
           )}
+
+          <div className="bg-white rounded-2xl shadow-lg p-6">
+            <h3 className="text-lg font-bold text-gray-900 mb-4 flex items-center">
+              <Brain className="w-5 h-5 mr-2 text-indigo-500" />
+              AI-анализ
+            </h3>
+            <p className="text-gray-600 text-sm mb-4">
+              Получите детальный анализ проекта от искусственного интеллекта: преимущества, риски и рекомендации для инвесторов
+            </p>
+            <button
+              onClick={() => setShowAIModal(true)}
+              className="w-full bg-indigo-600 text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 flex items-center justify-center"
+            >
+              <Brain className="w-5 h-5 mr-2" />
+              Открыть AI-анализ
+            </button>
+          </div>
         </div>
       </div>
+
+      <AIAnalysisModal
+        isOpen={showAIModal}
+        onClose={() => setShowAIModal(false)}
+        projectId={project.id}
+        projectTitle={project.title}
+        existingAnalysis={project.aiAnalysis ? {
+          summary: project.aiAnalysis,
+          pros: aiPros,
+          cons: aiCons,
+          risks: aiRisks,
+          investmentAdvantages: aiAdvantages
+        } : null}
+      />
     </>
   )
 }
