@@ -111,6 +111,7 @@ The app is already configured with:
   - Удалять комментарии
 - Админы видят все комментарии (включая неодобренные)
 - Учётная запись модератора: admin@email.com / admin123
+- Админ создаётся автоматически при запуске приложения (см. lib/prisma.ts)
 
 ### Управление периодами (подача/голосование)
 - Администратор может создавать периоды подачи проектов и голосования
@@ -140,6 +141,16 @@ The app is already configured with:
   - "My Projects" section in user profile with delete functionality
   - Delete restrictions: only DRAFT, PENDING_MODERATION, REJECTED, COMPLETED can be deleted
 
+- 30.11.2025: **Fresh GitHub Import Completed**
+  - Re-imported from GitHub and configured for Replit environment
+  - Installed all npm dependencies (Next.js 15.2.3, React 19, Prisma 5.22.0, etc.)
+  - Set up environment variables (DATABASE_URL, NEXTAUTH_URL, NEXTAUTH_SECRET)
+  - Configured Next.js Dev Server workflow on port 5000 with webview output
+  - Generated Prisma client and verified database connectivity
+  - Configured autoscale deployment with build and start commands
+  - Created .gitignore for proper file exclusion
+  - Verified app is running correctly with existing SQLite database and all features
+  
 - 29.11.2025: **GitHub Import Setup Completed**
   - Fresh clone imported and configured for Replit environment
   - Installed all npm dependencies (Next.js 15.5.6, React 19, Prisma 5.22.0, etc.)
