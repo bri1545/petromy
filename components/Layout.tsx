@@ -4,8 +4,9 @@ import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { 
   Home, FileText, Vote, Users, Settings, LogOut, Menu, X, Coins, 
-  LogIn, UserPlus, Building2, Clock, Calendar, User, ChevronRight
+  LogIn, UserPlus, Building2, Clock, Calendar, User, ChevronRight, Shield, MessageCircle
 } from 'lucide-react'
+import SupportChat from './SupportChat'
 
 interface LayoutProps {
   children: ReactNode
@@ -83,12 +84,14 @@ export default function Layout({ children }: LayoutProps) {
   const navItems = [
     { name: 'Главная', href: '/', icon: Home, show: true },
     { name: 'Проекты', href: '/projects', icon: FileText, show: true },
+    { name: 'Политика', href: '/policy', icon: Shield, show: true },
     { name: 'Мои проекты', href: '/dashboard', icon: FileText, show: !!session },
     { name: 'Подать проект', href: '/projects/new', icon: Vote, show: !!session },
   ]
 
   const adminItems = [
     { name: 'Модерация', href: '/moderation', icon: Users },
+    { name: 'Поддержка', href: '/support', icon: MessageCircle },
     { name: 'Управление', href: '/admin', icon: Settings },
   ]
 
@@ -340,20 +343,37 @@ export default function Layout({ children }: LayoutProps) {
 
       <footer className="bg-slate-800 text-slate-400 py-6 mt-auto">
         <div className="max-w-7xl mx-auto px-4">
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
-            <div className="flex items-center gap-2">
-              <Building2 className="w-5 h-5 text-blue-400" />
-              <span className="text-white font-semibold">Мой Петропавловск</span>
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+              <div className="flex items-center gap-2">
+                <Building2 className="w-5 h-5 text-blue-400" />
+                <span className="text-white font-semibold">Мой Петропавловск</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm">
+                <KazakhstanFlag size="small" />
+                <span>Петропавл, Қазақстан</span>
+                <span className="text-slate-600">·</span>
+                <span className="text-slate-500">© 2024</span>
+              </div>
             </div>
-            <div className="flex items-center gap-2 text-sm">
-              <KazakhstanFlag size="small" />
-              <span>Петропавл, Қазақстан</span>
+            <div className="flex items-center justify-center gap-4 text-sm border-t border-slate-700 pt-4">
+              <Link href="/policy" className="hover:text-white transition-colors">
+                Политика модерации
+              </Link>
               <span className="text-slate-600">·</span>
-              <span className="text-slate-500">© 2024</span>
+              <Link href="/projects" className="hover:text-white transition-colors">
+                Проекты
+              </Link>
+              <span className="text-slate-600">·</span>
+              <Link href="/auth/register" className="hover:text-white transition-colors">
+                Присоединиться
+              </Link>
             </div>
           </div>
         </div>
       </footer>
+
+      <SupportChat />
     </div>
   )
 }

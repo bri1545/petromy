@@ -131,7 +131,41 @@ The app is already configured with:
 - Возможность удаления черновиков, проектов на модерации, отклонённых или завершённых
 - Активные проекты (одобренные, на голосовании, на сборе средств, в работе) удалить нельзя
 
+### Политика модерации
+- Новая страница `/policy` с описанием правил модерации
+- Критерии одобрения проектов (полнота, реалистичность, польза, безопасность)
+- Причины отклонения проектов
+- Описание команды модераторов (эксперты, представители акимата, активисты, AI)
+- Процесс проверки проектов (подача → AI-анализ → модерация → решение)
+- Информация об AI-модерации комментариев
+- Ссылка в навигации и футере
+
+### Чат поддержки (Support Chat)
+- Плавающая кнопка чата в правом нижнем углу всех страниц
+- AI-помощник отвечает на вопросы о платформе
+- Быстрые вопросы для быстрого доступа
+- Автоматическая эскалация жалоб и сложных вопросов администратору
+- Категоризация обращений (проекты, голосование, аккаунт, жалобы и т.д.)
+- Панель администратора для ответов на обращения (`/support`)
+- Пользователи получают ответы админа в реальном времени (polling)
+- Ссылка на поддержку в админ-меню навигации
+
 ## Последние изменения
+
+- 30.11.2025: **Чат поддержки с AI**
+  - Добавлен плавающий чат поддержки на всех страницах
+  - AI-помощник отвечает на вопросы о платформе
+  - Автоматическая эскалация жалоб администратору
+  - Панель администратора для управления обращениями
+  - Модели SupportTicket и SupportMessage в базе данных
+  - Polling для получения ответов администратора в реальном времени
+
+- 30.11.2025: **Страница политики модерации**
+  - Создана красивая страница `/policy` с политикой модерации
+  - Добавлены секции: процесс модерации, критерии одобрения, причины отклонения
+  - Описание команды модераторов с иконками
+  - Ссылка добавлена в навигацию и футер
+  - Градиентный hero-раздел с иконкой щита
 
 - 29.11.2025: **Period Management & Project Features**
   - Added Period model for submission/voting periods
@@ -141,25 +175,16 @@ The app is already configured with:
   - "My Projects" section in user profile with delete functionality
   - Delete restrictions: only DRAFT, PENDING_MODERATION, REJECTED, COMPLETED can be deleted
 
-- 30.11.2025: **Fresh GitHub Import Completed**
+- 30.11.2025: **Fresh GitHub Import Setup Completed**
   - Re-imported from GitHub and configured for Replit environment
-  - Installed all npm dependencies (Next.js 15.2.3, React 19, Prisma 5.22.0, etc.)
-  - Set up environment variables (DATABASE_URL, NEXTAUTH_URL, NEXTAUTH_SECRET)
-  - Configured Next.js Dev Server workflow on port 5000 with webview output
-  - Generated Prisma client and verified database connectivity
-  - Configured autoscale deployment with build and start commands
-  - Created .gitignore for proper file exclusion
-  - Verified app is running correctly with existing SQLite database and all features
-  
-- 29.11.2025: **GitHub Import Setup Completed**
-  - Fresh clone imported and configured for Replit environment
   - Installed all npm dependencies (Next.js 15.5.6, React 19, Prisma 5.22.0, etc.)
   - Set up environment variables (DATABASE_URL, NEXTAUTH_URL, NEXTAUTH_SECRET)
   - Configured Next.js Dev Server workflow on port 5000 with webview output
   - Generated Prisma client and verified database connectivity
   - Configured autoscale deployment with build and start commands
-  - Created .gitignore for proper file exclusion
+  - Created .gitignore for proper file exclusion (Node.js, Next.js, Prisma)
   - Verified app is running correctly with existing SQLite database and all features
+  - Database contains existing projects, users, and data from previous session
 
 - Previous features include:
   - Admin controls for project/comment moderation

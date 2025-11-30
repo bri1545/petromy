@@ -156,3 +156,29 @@ model Period {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
+
+model SupportTicket {
+  id          String   @id @default(cuid())
+  status      String   @default("OPEN")
+  category    String   @default("GENERAL")
+  needsAdmin  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  userId      String?
+  userEmail   String?
+  userName    String?
+  
+  messages    SupportMessage[]
+}
+
+model SupportMessage {
+  id          String   @id @default(cuid())
+  content     String
+  sender      String
+  isAI        Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  
+  ticketId    String
+  ticket      SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+}
